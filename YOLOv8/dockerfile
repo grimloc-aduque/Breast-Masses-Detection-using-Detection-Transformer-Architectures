@@ -2,7 +2,7 @@
 FROM python
 
 # For rebuild:
-# FROM grimloc13/yolo-detection:v03 
+# FROM grimloc13/yolo-detection:v04 
 # RUN rm -rf ./home/YOLOv8
 
 # Linux Packages
