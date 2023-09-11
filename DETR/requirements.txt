@@ -1,0 +1,9 @@
+
+transformers
+torch
+pycocotools
+pytorch_lightning
+tensorboard
+coco_eval
+datasets
+sklearn
