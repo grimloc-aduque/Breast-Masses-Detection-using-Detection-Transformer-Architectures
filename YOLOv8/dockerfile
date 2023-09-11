@@ -1,5 +1,5 @@
 
-# FROM python
+FROM python
 
 # For rebuild:
 # FROM grimloc13/yolo-detection:v03 
