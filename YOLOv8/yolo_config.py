@@ -9,7 +9,7 @@ class Config:
     RUNS_DIR = 'runs_usfq_server'
     MODEL_SIZES = ['yolov8n.pt', 'yolov8s.pt', 'yolov8m.pt']
     THRESHOLDS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    THRESHOLDS = [0.1, 0.2, 0.3, 0.4]
     BATCH_SIZE = 16
     EPOCHS = 100
     YAML_FILE = 'data.yaml'
+    # YAML_FILE = 'data_docker.yaml'

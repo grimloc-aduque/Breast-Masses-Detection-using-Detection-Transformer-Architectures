@@ -5,11 +5,7 @@ import os
 
 if __name__ == '__main__':
     
-    dataset = 'InBreast_Yolov8'
-    model_sizes = ['yolov8n.pt', 'yolov8s.pt', 'yolov8m.pt']
-
-
-    for model_size in model_sizes:
+    for model_size in Config.MODEL_SIZES:
         for fold in range(1,11):
 
             fold_dir = f'fold_{fold}'
