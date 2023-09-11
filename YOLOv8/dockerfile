@@ -1,8 +1,8 @@
 
-FROM python
+# FROM python
 
 # For rebuild:
-# FROM grimloc13/yolo-detection:v04 
+FROM grimloc13/yolo-detection:v04 
 # RUN rm -rf ./home/YOLOv8
 
 # Linux Packages

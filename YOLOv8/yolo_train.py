@@ -21,6 +21,6 @@ if __name__ == '__main__':
                 batch = Config.BATCH_SIZE,
                 project = train_project)
             
-            break
-        break
+            # break # Fold
+        # break # Model Size
     
