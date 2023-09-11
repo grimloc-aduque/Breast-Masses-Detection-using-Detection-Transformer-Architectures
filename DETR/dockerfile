@@ -1,6 +1,9 @@
 
 FROM python
-# FROM grimloc13/yolo-detection:v02 # For rebuild
+
+# For rebuild:
+# FROM grimloc13/detr-detection:v01
+# RUN rm -rf ./home/YOLOv8
 
 # Linux Packages
 
@@ -9,10 +12,12 @@ RUN apt-get install libgl1 tree nano htop -y
 
 # Project Directory
 
-COPY ./Yolo /Yolo
+COPY ./DETR /home/DETR
 
 # Python Packages
 
-RUN pip3 install -r /Yolo/requirements.txt
+RUN pip3 install -r /home/DETR/requirements.txt
 RUN pip3 install ultralytics
 
+RUN pip install timm
+RUN pip install tensorboard

@@ -1,8 +1,6 @@
 
 import pytorch_lightning as pl
 import torch
-import torchvision
-from project_config import Config
 from transformers import DetrForObjectDetection
 
 

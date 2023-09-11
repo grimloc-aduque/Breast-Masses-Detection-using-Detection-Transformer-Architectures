@@ -12,3 +12,7 @@ class Config:
     EPOCHS = 100
     BATCH_SIZE = 16
     ACCELERATOR = 'gpu' if torch.cuda.is_available() else 'cpu'
+    
+    NUM_QUERIES = [10, 50, 100]
+    D_MODEL = [64, 128, 256]
+    ENCODER_DECODER_LAYERS = [2,4,6]

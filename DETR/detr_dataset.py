@@ -3,7 +3,7 @@ import os
 
 import torch
 import torchvision
-from project_config import Config
+from detr_config import Config
 from transformers import DetrImageProcessor
 
 
