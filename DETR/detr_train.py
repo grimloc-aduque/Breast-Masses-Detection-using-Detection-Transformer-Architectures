@@ -1,4 +1,3 @@
-
 import itertools
 import os
 
@@ -12,114 +11,113 @@ from detr_config import Config
 from detr_dataset import collate_fn, get_train_dataset, get_test_dataset
 from detr_model import DETRModel
 
+# Dataset
+
+train_dataset = get_train_dataset()
+test_dataset = get_test_dataset()
+
+# HyperParameters
+
+hyperparameters = itertools.product(*[
+    Config.BACKBONES,
+    Config.NUM_QUERIES,
+    Config.D_MODEL,
+    Config.TRANSFORMER_LAYERS,
+])
 
 
-if __name__ == '__main__':
-    # Dataset
-    train_dataset = get_train_dataset()
-    test_dataset = get_test_dataset()
+# Hyperparameter Search
 
-    
-    # HyperParameters
+for backbone, num_queries, d_model, transformer_layers in hyperparameters:
+    print('(Num Queries, Dim model, Enc-Dec Layers): ', 
+            f'({num_queries}, {d_model}, {transformer_layers})' )
 
-    hyperparameters = itertools.product(*[
-        Config.NUM_QUERIES,
-        Config.D_MODEL,
-        Config.ENCODER_DECODER_LAYERS
-    ])
+    # Model Construction
+
+    config = DetrConfig.from_pretrained(
+        Config.CHECKPOINT,
+        num_labels=1,
+        id2label = {0:'Mass'}, 
+        label2id={'Mass': 0},
+        num_queries = num_queries,
+        d_model = d_model,
+        num_head = 8,
+        encoder_layers = transformer_layers,
+        decoder_layers = transformer_layers,
+        position_embedding_type  = 'sine',
+        decoder_ffn_dim = 2048,
+        encoder_ffn_dim = 2048,
+        backbone=backbone
+    )
+
+    detr_model = DetrForObjectDetection.from_pretrained(
+        Config.CHECKPOINT,
+        config = config,
+        ignore_mismatched_sizes=True
+    )
+
+    model = DETRModel(detr_model=detr_model)
 
 
-    # Hyperparameter Search
+    # Training with K-fold Cross Validation 
 
-    for num_queries, d_model, encoder_decoder_layers in hyperparameters:
-        print('(Num Queries, Dim model, Enc-Dec Layers): ', 
-                f'({num_queries}, {d_model}, {encoder_decoder_layers})' )
+    k_fold = KFold(n_splits=10, shuffle=True, random_state=123456)
 
-        # Model Construction
+    for fold, (train_idx, valid_idx) in enumerate(k_fold.split(train_dataset)):
+        print(f"Fold {fold + 1}")
 
-        config = DetrConfig.from_pretrained(
-            Config.CHECKPOINT,
-            num_labels=1,
-            id2label = {0:'Mass'}, 
-            label2id={'Mass': 0},
-            num_queries = num_queries,
-            d_model = d_model,
-            num_head = 8,
-            encoder_layers = encoder_decoder_layers,
-            decoder_layers = encoder_decoder_layers,
-            position_embedding_type  = 'sine',
-            decoder_ffn_dim = 2048,
-            encoder_ffn_dim = 2048,
+        train_loader = DataLoader(
+            dataset = train_dataset,
+            batch_size = Config.BATCH_SIZE,
+            collate_fn=collate_fn,
+            sampler = SubsetRandomSampler(train_idx),
         )
 
-        detr_model = DetrForObjectDetection.from_pretrained(
-            Config.CHECKPOINT,
-            config = config,
-            ignore_mismatched_sizes=True
+        valid_loader = DataLoader(
+            dataset = train_dataset,
+            batch_size = Config.BATCH_SIZE,
+            collate_fn=collate_fn,
+            sampler = SubsetRandomSampler(valid_idx),
         )
 
-        model = DETRModel(detr_model=detr_model)
+        checkpoint_callback = pl.callbacks.ModelCheckpoint(
+            save_top_k = 1,
+            save_last = True,
+            monitor = "valid_loss",
+            mode = "min"
+        )
 
+        early_stopping_callback = pl.callbacks.EarlyStopping(
+            monitor = 'valid_loss',
+            patience = 15
+        )
 
-        # Training with K-fold Cross Validation 
+        version = os.path.join(
+            f'backbone={backbone.split(".")[0]}_queries={num_queries}_dmodel={d_model}_layers={transformer_layers}',
+            f'fold_{fold+1}'
+        )
 
-        k_fold = KFold(n_splits=10, shuffle=True, random_state=123456)
+        logger = pl.loggers.TensorBoardLogger(
+            save_dir = './',
+            version = version
+        )
 
-        for fold, (train_idx, valid_idx) in enumerate(k_fold.split(train_dataset)):
-            print(f"Fold {fold + 1}")
+        trainer = Trainer(
+            max_epochs = Config.EPOCHS, 
+            log_every_n_steps = 5, 
+            callbacks = [
+                checkpoint_callback, 
+                early_stopping_callback
+            ],
+            accelerator = Config.ACCELERATOR,
+            logger = logger
+        )
+        
+        trainer.fit(
+            model, 
+            train_dataloaders = train_loader, 
+            val_dataloaders = valid_loader
+        )
 
-            train_loader = DataLoader(
-                dataset = train_dataset,
-                batch_size = Config.BATCH_SIZE,
-                collate_fn=collate_fn,
-                sampler = SubsetRandomSampler(train_idx),
-            )
-
-            valid_loader = DataLoader(
-                dataset = train_dataset,
-                batch_size = Config.BATCH_SIZE,
-                collate_fn=collate_fn,
-                sampler = SubsetRandomSampler(valid_idx),
-            )
-
-            checkpoint_callback = pl.callbacks.ModelCheckpoint(
-                save_top_k = 1,
-                save_last = True,
-                monitor = "valid_loss",
-                mode = "min"
-            )
-
-            early_stopping_callback = pl.callbacks.EarlyStopping(
-                monitor = 'valid_loss',
-                patience = 15
-            )
-
-            version = os.path.join(
-                f'queries={num_queries}_dmodel={d_model}_layers={encoder_decoder_layers}',
-                f'fold_{fold+1}'
-            )
-
-            logger = pl.loggers.TensorBoardLogger(
-                save_dir = './',
-                version = version
-            )
-
-            trainer = Trainer(
-                max_epochs = Config.EPOCHS, 
-                log_every_n_steps = 5, 
-                callbacks = [
-                    checkpoint_callback, 
-                    early_stopping_callback
-                ],
-                accelerator = Config.ACCELERATOR,
-                logger = logger
-            )
-            
-            trainer.fit(
-                model, 
-                train_dataloaders = train_loader, 
-                val_dataloaders = valid_loader
-            )
-
-            break # Fold
-        break # Hyperparameter
+    #     break # Fold
+    # break # Hyperparameter

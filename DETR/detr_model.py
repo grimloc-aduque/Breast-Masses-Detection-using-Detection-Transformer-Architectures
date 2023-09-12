@@ -1,11 +1,10 @@
 
 import pytorch_lightning as pl
 import torch
-from transformers import DetrForObjectDetection
 
 
 class DETRModel(pl.LightningModule):
-    def __init__(self, detr_model:DetrForObjectDetection):
+    def __init__(self, detr_model):
         super().__init__()
         self.detr_model = detr_model
         self.save_hyperparameters()
