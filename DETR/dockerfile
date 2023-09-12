@@ -2,8 +2,8 @@
 FROM python
 
 # For rebuild:
-# FROM grimloc13/detr-detection:v01
-# RUN rm -rf ./home/YOLOv8
+# FROM grimloc13/detr-detection:v02
+# RUN rm -rf ./home/DETR
 
 # Linux Packages
 
@@ -17,7 +17,3 @@ COPY ./DETR /home/DETR
 # Python Packages
 
 RUN pip3 install -r /home/DETR/requirements.txt
-RUN pip3 install ultralytics
-
-RUN pip install timm
-RUN pip install tensorboard
