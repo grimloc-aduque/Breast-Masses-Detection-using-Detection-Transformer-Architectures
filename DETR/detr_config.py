@@ -5,8 +5,8 @@ import torch
 
 
 class Config:
-    DATASET = 'InBreast_Coco_old'
-    TRAIN_DIRECTORY = os.path.join(DATASET, "train")
+    DATASET = 'InBreast_Coco'
+    TRAIN_DIRECTORY = os.path.join(DATASET, "train_valid")
     TEST_DIRECTORY = os.path.join(DATASET, "test")
     CHECKPOINT = "facebook/detr-resnet-50"
     # CHECKPOINT = "SenseTime/deformable-detr"
