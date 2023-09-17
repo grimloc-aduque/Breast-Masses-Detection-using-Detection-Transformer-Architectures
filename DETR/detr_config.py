@@ -11,7 +11,7 @@ class Config:
     CHECKPOINT = "facebook/detr-resnet-50"
     # CHECKPOINT = "SenseTime/deformable-detr"
 
-    EPOCHS = 1
+    EPOCHS = 100
     BATCH_SIZE = 16
     ACCELERATOR = 'gpu' if torch.cuda.is_available() else 'cpu'
     

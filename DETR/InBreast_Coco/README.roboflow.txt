@@ -1,8 +1,8 @@
 
-Mammography mass detection - v2 2023-09-10 9:59pm
+Mammography mass detection - v3 2023-09-17 11:04am
 ==============================
 
-This dataset was exported via roboflow.com on September 11, 2023 at 3:00 AM GMT
+This dataset was exported via roboflow.com on September 17, 2023 at 4:06 PM GMT
 
 Roboflow is an end-to-end computer vision platform that helps you
 * collaborate with your team on computer vision projects

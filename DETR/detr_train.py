@@ -36,9 +36,9 @@ for backbone, num_queries, d_model, transformer_layers in hyperparameters:
 
     config = DetrConfig.from_pretrained(
         Config.CHECKPOINT,
-        num_labels=1,
-        id2label = {0:'Mass'}, 
-        label2id={'Mass': 0},
+        num_labels=2,
+        id2label = {0:'Mass', 1: 'No-Mass'}, 
+        label2id = {'Mass': 0, 'No-Mass': 1},
         num_queries = num_queries,
         d_model = d_model,
         num_head = 8,
