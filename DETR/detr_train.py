@@ -7,7 +7,7 @@ from io import StringIO
 
 import pandas as pd
 import pytorch_lightning as pl
-
+import torch
 from coco_eval import CocoEvaluator
 from detr_config import Config
 from detr_dataset import InBreastDataset, collate_fn
@@ -15,8 +15,10 @@ from detr_detection import prepare_for_coco_detection
 from detr_model import DETRModel
 from pytorch_lightning import Trainer
 from torch.utils.data import DataLoader
-from transformers import DetrImageProcessor, DetrConfig, DetrForObjectDetection
-from transformers import DeformableDetrImageProcessor, DeformableDetrConfig, DeformableDetrForObjectDetection
+from transformers import (DeformableDetrConfig,
+                          DeformableDetrForObjectDetection,
+                          DeformableDetrImageProcessor, DetrConfig,
+                          DetrForObjectDetection, DetrImageProcessor)
 
 STDOUT = sys.stdout
 
@@ -33,10 +35,10 @@ hyperparameters = itertools.product(*[
 ])
 
 hyperparameters = itertools.product(*[
-    ['DEFORMABLE-DETR'],
-    [Config.BACKBONES[0]],
+    ['DETR', 'D-DETR'],
+    ['resnet18.a1_in1k'],
+    [25],
     [64],
-    [128],
     [2],
 ])
 
@@ -46,11 +48,13 @@ hyperparameters = itertools.product(*[
 
 for architecture, backbone, num_queries, d_model, transformer_layers in hyperparameters:
     
-    print('ARCHITECTURE: ', architecture,
+    print('\n-------- MODEL --------',
+          '\nARCHITECTURE: ', architecture,
           '\nBACKBONE: ', backbone,
           '\nNUM QUERIES: ', num_queries,
           '\nDIM MODEL: ', d_model,
-          '\nENC-DEC LAYERS: ', transformer_layers)
+          '\nENC-DEC LAYERS: ', transformer_layers,
+          '\n------------------------\n')
     
     if architecture == 'DETR':
         IMG_PROCESSOR_CLASS = DetrImageProcessor
@@ -82,6 +86,7 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
     # Model Directory
 
     model_name = [
+        f'model={architecture}',
         f'backbone={backbone.split(".")[0]}',
         f'queries={num_queries}',
         f'dmodel={d_model}',
@@ -189,16 +194,20 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
             iou_types=["bbox"]
         )
         
-        for batch in valid_loader:
-            outputs = model(batch['pixel_values'])
-            predictions = image_processor.post_process_object_detection(outputs, threshold=0.1)
-            image_ids = [label['image_id'].item() for label in batch['labels']]
-            predictions = {image_id:output for image_id, output in zip(image_ids, predictions)}
-            predictions = prepare_for_coco_detection(predictions)
-            evaluator.update(predictions)
+        with torch.no_grad():
+            model.eval()
+            for batch in valid_loader:
+                outputs = model(batch['pixel_values'])
+                batch_size = outputs.logits.shape[0]
+                predictions = image_processor.post_process_object_detection(
+                    outputs, threshold=0.1, target_sizes=batch_size*[[800,800]])
+                image_ids = [label['image_id'].item() for label in batch['labels']]
+                predictions = {image_id:output for image_id, output in zip(image_ids, predictions)}
+                predictions = prepare_for_coco_detection(predictions)
+                evaluator.update(predictions)
             
-        evaluator.synchronize_between_processes()
-        evaluator.accumulate()
+            evaluator.synchronize_between_processes()
+            evaluator.accumulate()
         
         # Metrics
         
@@ -218,12 +227,12 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         metrics_by_fold.append(metrics_dict)
         index.append(fold_name)
         
-        shutil.rmtree(checkpoints_dir)
+        if fold != 1:
+            shutil.rmtree(checkpoints_dir)
           
 
-        break # Fold
+        # break # Fold
     
-    break 
     
     # Aggregate Metrics
     
@@ -238,7 +247,7 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
     
     metrics_by_fold.to_csv(metrics_path)
     
-    break # Hyperparameter
+    # break # Hyperparameter
 
 
 # %%

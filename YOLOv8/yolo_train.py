@@ -32,8 +32,7 @@ for model_size in Config.MODEL_SIZES:
             data = yaml_path,
             project = project,
             imgsz = Config.IMG_SIZE,
-            # epochs = Config.EPOCHS,
-            epochs = 1,
+            epochs = Config.EPOCHS,
             batch = Config.BATCH_SIZE,
             device = Config.DEVICE
         )
