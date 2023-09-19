@@ -33,9 +33,3 @@ def collate_fn(batch):
 
 
 detr_processor = DetrImageProcessor.from_pretrained(Config.CHECKPOINT)
-
-def get_train_dataset():
-    return InBreastDataset(images_path=Config.TRAIN_DIRECTORY, processor=detr_processor)
-
-def get_test_dataset():
-    return InBreastDataset(images_path=Config.TEST_DIRECTORY, processor=detr_processor)

@@ -17,26 +17,26 @@ if($command -eq "rebuild"){
     docker build -t grimloc13/$model-detection:$version -f ./$project_root/docker_rebuild.dockerfile .
 }
 if($command -eq "run"){
-    docker run -d --name $model-detection-$version -it grimloc13/$model-detection:$version /bin/bash
-    docker start $model-detection-$version
-    docker exec -it $model-detection-$version /bin/bash
+    docker run -d --name $model-$version -it grimloc13/$model-detection:$version /bin/bash
+    docker start $model-$version
+    docker exec -it $model-$version /bin/bash
 }
 if($command -eq "execute"){
-    docker start $model-detection-$version
-    docker exec -it $model-detection-$version /bin/bash
+    docker start $model-$version
+    docker exec -it $model-$version /bin/bash
 }
 if($command -eq "push"){
-    docker push grimloc13/$model-detection:$version
+    docker push grimloc13/$model:$version
 }
 if($command -eq "pull"){
-    docker pull grimloc13/$model-detection:$version
+    docker pull grimloc13/$model:$version
 }
 if($command -eq "remove"){
     try{
-        docker stop $model-detection-$version
+        docker stop $model-$version
     }catch{}
     try{
-        docker rm $model-detection-$version
+        docker rm $model-$version
     }catch{}
 }
 

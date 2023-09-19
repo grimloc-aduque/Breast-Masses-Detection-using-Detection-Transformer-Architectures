@@ -1,5 +1,5 @@
 
-FROM grimloc13/yolo-detection:v05
+FROM grimloc13/yolo-detection:v06
 
 # Replace Project Directory
 

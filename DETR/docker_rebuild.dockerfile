@@ -1,5 +1,5 @@
 
-FROM grimloc13/detr-detection:v03
+FROM grimloc13/detr-detection:v05
 
 # Replace Project Directory
 
