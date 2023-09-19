@@ -3,8 +3,6 @@ import os
 
 import torch
 import torchvision
-from detr_config import Config
-from transformers import DetrImageProcessor
 
 
 class InBreastDataset(torchvision.datasets.CocoDetection):
@@ -31,5 +29,3 @@ def collate_fn(batch):
     batch['labels'] = labels
     return batch
 
-
-detr_processor = DetrImageProcessor.from_pretrained(Config.CHECKPOINT)
