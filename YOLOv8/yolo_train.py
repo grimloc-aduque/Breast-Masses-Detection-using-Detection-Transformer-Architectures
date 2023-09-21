@@ -61,8 +61,9 @@ for model_size in Config.MODEL_SIZES:
         metrics_by_fold.append(metrics)
         index.append(fold_name)
         
-        shutil.rmtree(weights_dir)
-        
+        if fold != 1:
+            print("Cleaning Checkpoints")
+            # shutil.rmtree(weights_dir)
     
         # break # Fold
     

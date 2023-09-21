@@ -62,7 +62,7 @@ def plot_results(image, results, id2label):
         print(f'Score: {score}')
         draw.rectangle((x, y, xf, yf), outline='red', width=1)
         text = f'{np.round(score, 2)} - {id2label[label]}'
-        draw.text((x, y), text, fill='red', 
+        draw.text((x, y), text, fill='black', 
                   font=ImageFont.truetype("arial.ttf", 18))
 
     plt.figure(figsize=(4,4))

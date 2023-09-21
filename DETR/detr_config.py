@@ -7,6 +7,7 @@ class Config:
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     ACCELERATOR = 'gpu' if torch.cuda.is_available() else 'cpu'
+    NUM_CLASSES = 1
 
     ARCHITECTURES = ['DETR', 'D-DETR']
     BACKBONES = [

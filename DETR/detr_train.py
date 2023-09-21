@@ -34,15 +34,10 @@ hyperparameters = itertools.product(*[
     Config.TRANSFORMER_LAYERS,
 ])
 
-hyperparameters = itertools.product(*[
-    ['DETR', 'D-DETR'],
-    ['resnet18.a1_in1k'],
-    [25],
-    [64],
-    [2],
-])
-
-
+hyperparameters = [
+    ('DETR', 'resnet50', 100, 256, 6),
+    ('D-DETR', 'resnet50', 300, 256, 6),
+]
 
 # Hyperparameter Search
 
@@ -72,9 +67,11 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
     # Model Configuration
 
     config = DETR_CONFIG_CLASS(
-        num_labels=2,
-        id2label = {0:'Mass', 1: 'No-Mass'}, 
-        label2id = {'Mass': 0, 'No-Mass': 1},
+        num_labels = Config.NUM_CLASSES,
+        # id2label = {0:'Mass', 1: 'No-Mass'}, 
+        # label2id = {'Mass': 0, 'No-Mass': 1},
+        id2label = {0:'Mass'}, 
+        label2id = {'Mass': 0},
         num_queries = num_queries,
         d_model = d_model,
         num_head = 8,
@@ -194,42 +191,63 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
             iou_types=["bbox"]
         )
         
+        valid_predictions = False
         with torch.no_grad():
             model.eval()
             for batch in valid_loader:
                 outputs = model(batch['pixel_values'])
                 batch_size = outputs.logits.shape[0]
                 predictions = image_processor.post_process_object_detection(
-                    outputs, threshold=0.1, target_sizes=batch_size*[[800,800]])
+                    outputs, threshold=0.05, target_sizes=batch_size*[[800,800]])
                 image_ids = [label['image_id'].item() for label in batch['labels']]
                 predictions = {image_id:output for image_id, output in zip(image_ids, predictions)}
                 predictions = prepare_for_coco_detection(predictions)
-                evaluator.update(predictions)
+                if len(predictions) != 0:
+                    valid_predictions = True
+                    evaluator.update(predictions)
             
+        if valid_predictions:
             evaluator.synchronize_between_processes()
             evaluator.accumulate()
         
-        # Metrics
-        
-        metrics_buffer = StringIO()
-        sys.stdout = metrics_buffer
-        evaluator.summarize()
-        sys.stdout = STDOUT
-        
-        metrics = metrics_buffer.getvalue()
-        metrics = metrics.split('\n')
-        metrics = [m for m in metrics if 'Average' in m]
-        metrics_dict = {}
-        for metric in metrics:
-            name, value = metric.split(' = ')
-            metrics_dict[name[1:]] = float(value)
-        
+            # Metrics
+            
+            metrics_buffer = StringIO()
+            sys.stdout = metrics_buffer
+            evaluator.summarize()
+            sys.stdout = STDOUT
+            
+            metrics = metrics_buffer.getvalue()
+            metrics = metrics.split('\n')
+            metrics = [m for m in metrics if 'Average' in m]
+            metrics_dict = {}
+            for metric in metrics:
+                name, value = metric.split(' = ')
+                metrics_dict[name[1:]] = float(value)
+                
+        else:
+            metrics_dict = {
+                'Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]': 0.0,
+                'Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ]': 0.0,
+                'Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ]': 0.0,
+                'Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]': 0.0,
+                'Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]': 0.0,
+                'Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]': 0.0,
+                'Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]': 0.0
+            }
+            
+            
         metrics_by_fold.append(metrics_dict)
         index.append(fold_name)
         
         if fold != 1:
-            shutil.rmtree(checkpoints_dir)
-          
+            print("Cleaning Checkpoints")
+            # shutil.rmtree(checkpoints_dir)
 
         # break # Fold
     
@@ -248,6 +266,9 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
     metrics_by_fold.to_csv(metrics_path)
     
     # break # Hyperparameter
+
+
+# %%
 
 
 # %%

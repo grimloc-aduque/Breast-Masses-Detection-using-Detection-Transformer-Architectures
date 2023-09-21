@@ -1,16 +1,15 @@
 path: C:/Users/Alejandro Duque/Documents/USFQ/Proyecto Integrador/Workspace/YOLOv8/InBreast_Yolov8
 
-
 train: ./train_valid
 val: ./test
 test: ./test
 
-nc: 2
-names: ['Mass', 'No-Mass']
+nc: 1
+names: ['Mass']
 
 roboflow:
   workspace: universidad-san-francisco-de-quito
   project: mammography-mass-detection
-  version: 3
+  version: 6
   license: MIT
-  url: https://universe.roboflow.com/universidad-san-francisco-de-quito/mammography-mass-detection/dataset/3
+  url: https://universe.roboflow.com/universidad-san-francisco-de-quito/mammography-mass-detection/dataset/6
