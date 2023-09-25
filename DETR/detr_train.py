@@ -195,7 +195,7 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         with torch.no_grad():
             model.eval()
             for batch in valid_loader:
-                outputs = model(batch['pixel_values'])
+                outputs = model(batch['pixel_values'].to())
                 batch_size = outputs.logits.shape[0]
                 predictions = image_processor.post_process_object_detection(
                     outputs, threshold=0.05, target_sizes=batch_size*[[800,800]])

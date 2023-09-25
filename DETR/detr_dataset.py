@@ -14,6 +14,8 @@ class InBreastDataset(torchvision.datasets.CocoDetection):
     def __getitem__(self, idx):
         img, target = super().__getitem__(idx)
         image_id = self.ids[idx]
+        target = {'image_id': image_id, 'annotations': target}
+        
         annotations  = {'image_id': image_id, 'annotations': target}
         encoding = self.processor(images=img, annotations=annotations, return_tensors="pt")
         pixel_values = encoding["pixel_values"].squeeze()
