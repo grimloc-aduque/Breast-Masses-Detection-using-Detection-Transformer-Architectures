@@ -15,10 +15,10 @@ YOLOv8/runs_*
 DETR/lightning_logs
 
 # Dataset Folds
-YOLOv8/InBreast_Yolov8/fold_*
+# YOLOv8/InBreast_Yolov8/fold_*
 YOLOv8/InBreast_Yolov8_NoMass/fold_*
 
-DETR/InBreast_Coco/fold_*
+# DETR/InBreast_Coco/fold_*
 DETR/InBreast_Coco_NoMass/fold_*
 
 # Pycache
