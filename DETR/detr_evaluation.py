@@ -7,9 +7,21 @@ import torch
 from coco_eval import CocoEvaluator
 from detr_dataset import get_dataloader
 from detr_config import Config
+from detr_model import DETRModel
+import os
 
 STDOUT = sys.stdout
 
+
+def load_best_model(version):
+    checkpoints_dir = os.path.join(Config.LOGS_DIR, version, 'checkpoints')
+    best_checkpoint = [f for f in os.listdir(checkpoints_dir) if 'last' not in f][0]
+    checkpoint_path = os.path.join(checkpoints_dir, best_checkpoint)
+    model = DETRModel.load_from_checkpoint(
+        checkpoint_path = checkpoint_path,
+        map_location = torch.device(Config.DEVICE)
+    )
+    return model
 
 def convert_to_xywh(boxes):
     xmin, ymin, xmax, ymax = boxes.unbind(1)
