@@ -9,27 +9,39 @@ class DETRModel(pl.LightningModule):
         self.detr_model = detr_model
         self.save_hyperparameters()
 
-    def forward(self, pixel_values):
-        outputs = self.detr_model(pixel_values)
+    def forward(self, pixel_values, pixel_mask):
+        outputs = self.detr_model(
+            pixel_values = pixel_values, 
+            pixel_mask = pixel_mask
+        )
         return outputs
+    
+    def common_step(self, batch, batch_idx):
+        pixel_values = batch["pixel_values"]
+        pixel_mask = batch["pixel_mask"]
+        labels = [{k: v.to(self.device) for k, v in t.items()} for t in batch["labels"]]
+        outputs = self.detr_model(
+            pixel_values = pixel_values, 
+            pixel_mask = pixel_mask, 
+            labels = labels
+        )
+        loss = outputs.loss
+        loss_dict = outputs.loss_dict
+        return loss, loss_dict
 
     def training_step(self, batch, batch_idx):
-        pixel_values = batch["pixel_values"]
-        labels = batch['labels']
-        outputs = self.detr_model(pixel_values=pixel_values, labels=labels)
-        self.log("train_loss", outputs.loss)
-        for loss_name, loss in outputs.loss_dict.items():
+        loss, loss_dict = self.common_step(batch, batch_idx)
+        self.log("train_loss", loss)
+        for loss_name, loss in loss_dict.items():
             self.log(f"train_{loss_name}", loss.item())
-        return outputs.loss
+        return loss
      
     def validation_step(self, batch, batch_idx):
-        pixel_values = batch["pixel_values"]
-        labels = batch['labels']
-        outputs = self.detr_model(pixel_values=pixel_values, labels=labels)
-        self.log("valid_loss", outputs.loss)
-        for loss_name, loss in outputs.loss_dict.items():
+        loss, loss_dict = self.common_step(batch, batch_idx)  
+        self.log("valid_loss", loss)
+        for loss_name, loss in loss_dict.items():
             self.log(f"valid_{loss_name}", loss.item())
-        return outputs.loss
+        return loss
 
     def configure_optimizers(self):
         param_dicts = [

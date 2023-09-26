@@ -1,4 +1,6 @@
 
+import itertools
+
 import torch
 
 
@@ -7,6 +9,7 @@ class Config:
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     ACCELERATOR = 'gpu' if torch.cuda.is_available() else 'cpu'
+    DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     NUM_CLASSES = 1
 
     ARCHITECTURES = ['DETR', 'D-DETR']
@@ -19,7 +22,16 @@ class Config:
     D_MODEL = [64, 128, 256]
     TRANSFORMER_LAYERS = [2,4,6]
     
-    EPOCHS = 100
-    BATCH_SIZE = 16
+    HYPERPARAMS = itertools.product(*[
+        ARCHITECTURES,
+        BACKBONES,
+        NUM_QUERIES,
+        D_MODEL,
+        TRANSFORMER_LAYERS,
+    ])
+    
+    
+    EPOCHS = 1
+    BATCH_SIZE = 4
     
     
