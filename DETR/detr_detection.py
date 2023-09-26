@@ -26,7 +26,7 @@ def plot_results(image, results, id2label):
     draw = ImageDraw.Draw(image, "RGBA")
 
     for score, label, (x, y, xf, yf) in zip(scores.tolist(), labels.tolist(), boxes.tolist()):
-        print(f'Score: {score}')
+        # print(f'Score: {score}')
         draw.rectangle((x, y, xf, yf), outline='red', width=1)
         text = f'{np.round(score, 2)} - {id2label[label]}'
         draw.text((x, y), text, fill='black', 
