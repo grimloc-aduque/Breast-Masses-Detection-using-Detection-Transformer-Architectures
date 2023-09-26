@@ -9,8 +9,6 @@ detr-facebook/*
 Otros/
 Otros/*
 
-DETR/balloon/
-DETR/balloon/*
 
 # Run files
 YOLOv8/runs_*
