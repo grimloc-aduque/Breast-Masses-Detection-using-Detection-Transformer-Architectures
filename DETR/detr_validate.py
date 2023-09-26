@@ -23,16 +23,12 @@ def get_metrics(model, dataset, image_processor, threshold):
     valid_predictions = False
     model.eval()
     for batch in dataloader:
-        pixel_values = batch["pixel_values"].to(Config.DEVICE)
-        pixel_mask = batch["pixel_mask"].to(Config.DEVICE)
-        labels = [
-            {k: v.to(Config.DEVICE) for k, v in t.items()}
-            for t in batch["labels"]
-        ]
         with torch.no_grad():
-            outputs = model(pixel_values=pixel_values, pixel_mask=pixel_mask)
-            
-
+            outputs = model(
+                pixel_values = batch["pixel_values"], 
+                pixel_mask =  batch["pixel_mask"],
+            )
+        labels = batch["labels"]
         orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
         results = image_processor.post_process_object_detection(
             outputs, target_sizes=orig_target_sizes, threshold=threshold)

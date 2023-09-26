@@ -17,13 +17,10 @@ class DETRModel(pl.LightningModule):
         return outputs
     
     def common_step(self, batch, batch_idx):
-        pixel_values = batch["pixel_values"]
-        pixel_mask = batch["pixel_mask"]
-        labels = [{k: v.to(self.device) for k, v in t.items()} for t in batch["labels"]]
         outputs = self.detr_model(
-            pixel_values = pixel_values, 
-            pixel_mask = pixel_mask, 
-            labels = labels
+            pixel_values = batch["pixel_values"], 
+            pixel_mask = batch["pixel_mask"], 
+            labels = batch["labels"]
         )
         loss = outputs.loss
         loss_dict = outputs.loss_dict
