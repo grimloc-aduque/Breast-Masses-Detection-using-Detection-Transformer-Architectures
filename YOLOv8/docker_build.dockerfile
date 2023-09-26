@@ -11,7 +11,7 @@ RUN apt-get update && \
         python3.8 \
         python3-pip \
         python3-dev \
-        libgl1 \
+        libglib2.0-0 \
         tree \
         nano \
         htop

@@ -5,11 +5,40 @@ from io import StringIO
 
 import torch
 from coco_eval import CocoEvaluator
-from detr_config import Config
 from detr_dataset import get_dataloader
-from detr_detection import prepare_for_coco_detection
+from detr_config import Config
 
 STDOUT = sys.stdout
+
+
+def convert_to_xywh(boxes):
+    xmin, ymin, xmax, ymax = boxes.unbind(1)
+    return torch.stack((xmin, ymin, xmax - xmin, ymax - ymin), dim=1)
+
+
+def prepare_for_coco_detection(predictions):
+    coco_results = []
+    for original_id, prediction in predictions.items():
+        if len(prediction) == 0:
+            continue
+
+        boxes = prediction["boxes"]
+        boxes =  convert_to_xywh(boxes).tolist()
+        scores = prediction["scores"].tolist()
+        labels = prediction["labels"].tolist()
+
+        coco_results.extend(
+            [
+                {
+                    "image_id": original_id,
+                    "category_id": labels[k],
+                    "bbox": box,
+                    "score": scores[k],
+                }
+                for k, box in enumerate(boxes)
+            ]
+        )
+    return coco_results
 
 
 def get_metrics(model, dataset, image_processor, threshold):
@@ -18,17 +47,21 @@ def get_metrics(model, dataset, image_processor, threshold):
         iou_types=["bbox"]
     )
     
-    dataloader = get_dataloader(dataset)
+    dataloader = get_dataloader(dataset, image_processor)
     
     valid_predictions = False
     model.eval()
     for batch in dataloader:
+        
+        pixel_values = batch["pixel_values"].to(Config.DEVICE)
+        pixel_mask = batch["pixel_mask"].to(Config.DEVICE)
+        labels = [{k: v.to(Config.DEVICE) for k, v in t.items()} for t in batch["labels"]] 
+        
         with torch.no_grad():
             outputs = model(
-                pixel_values = batch["pixel_values"], 
-                pixel_mask =  batch["pixel_mask"],
+                pixel_values = pixel_values,
+                pixel_mask = pixel_mask
             )
-        labels = batch["labels"]
         orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
         results = image_processor.post_process_object_detection(
             outputs, target_sizes=orig_target_sizes, threshold=threshold)

@@ -9,34 +9,27 @@ class DETRModel(pl.LightningModule):
         self.detr_model = detr_model
         self.save_hyperparameters()
 
-    def forward(self, pixel_values, pixel_mask):
-        outputs = self.detr_model(
-            pixel_values = pixel_values, 
-            pixel_mask = pixel_mask
-        )
+    def forward(self, pixel_values):
+        outputs = self.detr_model(pixel_values)
         return outputs
-    
-    def common_step(self, batch, batch_idx):
-        outputs = self.detr_model(
-            pixel_values = batch["pixel_values"], 
-            pixel_mask = batch["pixel_mask"], 
-            labels = batch["labels"]
-        )
-        return outputs.loss, outputs.loss_dict
 
     def training_step(self, batch, batch_idx):
-        loss, loss_dict = self.common_step(batch, batch_idx)
-        self.log("train_loss", loss)
-        for loss_name, loss_value in loss_dict.items():
-            self.log(f"train_{loss_name}", loss_value.item())
-        return loss
+        pixel_values = batch["pixel_values"]
+        labels = batch['labels']
+        outputs = self.detr_model(pixel_values=pixel_values, labels=labels)
+        self.log("train_loss", outputs.loss)
+        for loss_name, loss in outputs.loss_dict.items():
+            self.log(f"train_{loss_name}", loss.item())
+        return outputs.loss
      
     def validation_step(self, batch, batch_idx):
-        loss, loss_dict = self.common_step(batch, batch_idx)  
-        self.log("valid_loss", loss)
-        for loss_name, loss_value in loss_dict.items():
-            self.log(f"valid_{loss_name}", loss_value.item())
-        return loss
+        pixel_values = batch["pixel_values"]
+        labels = batch['labels']
+        outputs = self.detr_model(pixel_values=pixel_values, labels=labels)
+        self.log("valid_loss", outputs.loss)
+        for loss_name, loss in outputs.loss_dict.items():
+            self.log(f"valid_{loss_name}", loss.item())
+        return outputs.loss
 
     def configure_optimizers(self):
         param_dicts = [
