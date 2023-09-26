@@ -81,7 +81,10 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         image_processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")        
         detr_model = DetrForObjectDetection.from_pretrained(
             "facebook/detr-resnet-50",
-            num_labels = 1)
+            num_labels = 1,
+            id2label = {0:'Mass'}, 
+            label2id = {'Mass': 0}
+        )
         model = DETRModel(detr_model=detr_model)
         
         # Datasets
@@ -102,6 +105,7 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         
         version = os.path.join(model_name, fold_name)
         trainer = get_trainer(version)
+        break
         trainer.fit(model, train_dataloaders=train_loader,
                     val_dataloaders=valid_loader)
         
