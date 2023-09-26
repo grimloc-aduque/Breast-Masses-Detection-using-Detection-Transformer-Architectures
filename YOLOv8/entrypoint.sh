@@ -1,3 +1,3 @@
 
 cd /home/YOLOv8
-nohup python yolo_train.py &
+nohup python3 yolo_train.py &
