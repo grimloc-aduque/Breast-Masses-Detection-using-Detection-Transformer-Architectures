@@ -35,7 +35,7 @@ class Config:
     ])
     
     
-    EPOCHS = 50
-    BATCH_SIZE = 8
+    EPOCHS = 300
+    BATCH_SIZE = 16
     
     

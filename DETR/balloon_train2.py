@@ -83,7 +83,8 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
             "facebook/detr-resnet-50",
             num_labels = 1,
             id2label = {0:'Mass'}, 
-            label2id = {'Mass': 0}
+            label2id = {'Mass': 0},
+            ignore_mismatched_sizes=True
         )
         model = DETRModel(detr_model=detr_model)
         
@@ -105,7 +106,6 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         
         version = os.path.join(model_name, fold_name)
         trainer = get_trainer(version)
-        break
         trainer.fit(model, train_dataloaders=train_loader,
                     val_dataloaders=valid_loader)
         
