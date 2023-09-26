@@ -1,7 +1,6 @@
 
 import os
 
-import torch
 import torchvision
 from detr_config import Config
 from torch.utils.data import DataLoader
@@ -24,7 +23,7 @@ class InBreastDataset(torchvision.datasets.CocoDetection):
 
 
 def collate_fn(batch, image_processor):
-    pixel_values = torch.stack([item[0] for item in batch])
+    pixel_values = [item[0] for item in batch]
     encoding = image_processor.pad(pixel_values, return_tensors="pt")
     labels = [item[1] for item in batch]
     batch = {}
