@@ -92,7 +92,7 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         
         fold_name = f'fold_{fold}'
         dataset_dir = os.path.join(Config.DATASET, fold_name)
-        dataset_dir = './balloon/' # Remove this
+        # dataset_dir = './balloon/' # Remove this
         
         train_dir = os.path.join(dataset_dir, 'train')
         train_dataset = get_dataset(train_dir, image_processor)

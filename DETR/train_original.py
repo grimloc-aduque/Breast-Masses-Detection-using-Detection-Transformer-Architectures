@@ -199,8 +199,14 @@ for architecture, backbone, num_queries, d_model, transformer_layers in hyperpar
         
         # Model
         
-        image_processor = IMG_PROCESSOR_CLASS()        
-        detr_model = DETR_CLASS(config=config)
+        image_processor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")        
+        detr_model = DetrForObjectDetection.from_pretrained(
+            "facebook/detr-resnet-50",
+            num_labels = 1,
+            id2label = {0:'Mass'}, 
+            label2id = {'Mass': 0},
+            ignore_mismatched_sizes=True
+        )
         model = DETRModel(detr_model=detr_model)
         
         # Datasets
