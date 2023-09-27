@@ -15,7 +15,7 @@ def get_trainer(version):
 
     early_stopping_callback = pl.callbacks.EarlyStopping(
         monitor = 'valid_loss',
-        patience = 30
+        patience = 50
     )
 
     logger = pl.loggers.TensorBoardLogger(
