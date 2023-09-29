@@ -6,7 +6,7 @@ import pandas as pd
 from detr_config import Config
 from detr_dataset import get_dataset, get_dataloader
 from detr_trainer import get_trainer
-from detr_evaluation import load_best_model, get_metrics
+from DETR.detr_evaluator import load_best_model, get_metrics
 from detr_model import DETRModel
 from transformers import (DeformableDetrConfig,
                           DeformableDetrForObjectDetection,

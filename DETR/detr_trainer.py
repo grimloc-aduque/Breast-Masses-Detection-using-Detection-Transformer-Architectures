@@ -5,7 +5,6 @@ from pytorch_lightning import Trainer
 
 
 def get_trainer(version):
-
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
         save_top_k = 1,
         save_last = True,

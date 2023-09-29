@@ -1,96 +1,87 @@
 
-
+import os
 import sys
 from io import StringIO
 
 import torch
 from coco_eval import CocoEvaluator
-from detr_dataset import get_dataloader
 from detr_config import Config
+from detr_metrics import metrics_names
 from detr_model import DETRModel
-import os
 
 STDOUT = sys.stdout
 
+class ModelEvaluator:
 
-def load_best_model(version):
-    checkpoints_dir = os.path.join(Config.LOGS_DIR, version, 'checkpoints')
-    best_checkpoint = [f for f in os.listdir(checkpoints_dir) if 'last' not in f][0]
-    checkpoint_path = os.path.join(checkpoints_dir, best_checkpoint)
-    model = DETRModel.load_from_checkpoint(
-        checkpoint_path = checkpoint_path,
-        map_location = torch.device(Config.DEVICE)
-    )
-    return model
-
-def convert_to_xywh(boxes):
-    xmin, ymin, xmax, ymax = boxes.unbind(1)
-    return torch.stack((xmin, ymin, xmax - xmin, ymax - ymin), dim=1)
+    def __init__(self, checkpoints_dir, image_processor, dataset, dataloader):
+        self.checkpoints_dir = checkpoints_dir
+        self.model = self._load_best_model()
+        self.image_processor = image_processor
+        self.dataset = dataset
+        self.dataloader = dataloader
 
 
-def prepare_for_coco_detection(predictions):
-    coco_results = []
-    for original_id, prediction in predictions.items():
-        if len(prediction) == 0:
-            continue
-
-        boxes = prediction["boxes"]
-        boxes =  convert_to_xywh(boxes).tolist()
-        scores = prediction["scores"].tolist()
-        labels = prediction["labels"].tolist()
-
-        coco_results.extend(
-            [
-                {
-                    "image_id": original_id,
-                    "category_id": labels[k],
-                    "bbox": box,
-                    "score": scores[k],
-                }
-                for k, box in enumerate(boxes)
-            ]
+    def _load_best_model(self):
+        best_checkpoint = [f for f in os.listdir(self.checkpoints_dir) if 'last' not in f][0]
+        checkpoint_path = os.path.join(self.checkpoints_dir, best_checkpoint)
+        model = DETRModel.load_from_checkpoint(
+            checkpoint_path = checkpoint_path,
+            map_location = torch.device(Config.DEVICE)
         )
-    return coco_results
+        return model
 
 
-def get_metrics(model, dataset, image_processor, threshold):
-    evaluator = CocoEvaluator(
-        coco_gt=dataset.coco, 
-        iou_types=["bbox"]
-    )
+    # Coco Formating
+
+    def _convert_to_xywh(self, boxes):
+        xmin, ymin, xmax, ymax = boxes.unbind(1)
+        return torch.stack((xmin, ymin, xmax - xmin, ymax - ymin), dim=1)
+
+
+    def _prepare_for_coco_detection(self, predictions):
+        coco_results = []
+        for original_id, prediction in predictions.items():
+            if len(prediction) == 0:
+                continue
+            boxes = prediction["boxes"]
+            boxes =  self._convert_to_xywh(boxes).tolist()
+            scores = prediction["scores"].tolist()
+            labels = prediction["labels"].tolist()
+            coco_results.extend(
+                [
+                    {
+                        "image_id": original_id,
+                        "category_id": labels[k],
+                        "bbox": box,
+                        "score": scores[k],
+                    }
+                    for k, box in enumerate(boxes)
+                ]
+            )
+        return coco_results
     
-    dataloader = get_dataloader(dataset, image_processor)
     
-    valid_predictions = False
-    model.eval()
-    for batch in dataloader:
-        
+    def _generate_coco_predictions(self, batch, threshold):
         pixel_values = batch["pixel_values"].to(Config.DEVICE)
         pixel_mask = batch["pixel_mask"].to(Config.DEVICE)
         labels = [{k: v.to(Config.DEVICE) for k, v in t.items()} for t in batch["labels"]] 
-        
         with torch.no_grad():
-            outputs = model(
+            outputs = self.model(
                 pixel_values = pixel_values,
                 pixel_mask = pixel_mask
             )
         orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
-        results = image_processor.post_process_object_detection(
+        results = self.image_processor.post_process_object_detection(
             outputs, target_sizes=orig_target_sizes, threshold=threshold)
         
         predictions = {target['image_id'].item(): output for target, output in zip(labels, results)}
-        predictions = prepare_for_coco_detection(predictions)
-        
-        if len(predictions) != 0:
-            valid_predictions = True
-            evaluator.update(predictions)
-        
-    if valid_predictions:
-        evaluator.synchronize_between_processes()
-        evaluator.accumulate()
-    
-        # Metrics
-        
+        predictions = self._prepare_for_coco_detection(predictions)
+        return predictions
+
+
+    # Metrics
+
+    def _summarize_metrics(self, evaluator):
         metrics_buffer = StringIO()
         sys.stdout = metrics_buffer
         evaluator.summarize()
@@ -103,21 +94,33 @@ def get_metrics(model, dataset, image_processor, threshold):
         for metric in metrics:
             name, value = metric.split(' = ')
             metrics_dict[name[1:]] = float(value)
-            
-    else:
-        metrics_dict = {
-            'Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]': 0.0,
-            'Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ]': 0.0,
-            'Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ]': 0.0,
-            'Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]': 0.0,
-            'Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]': 0.0,
-            'Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]': 0.0,
-            'Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]': 0.0
-        }
+        return metrics_dict
+
+
+    def get_metrics(self, threshold):
+        evaluator = CocoEvaluator(
+            coco_gt=self.dataset.coco, 
+            iou_types=["bbox"]
+        )
         
-    return metrics_dict
+        are_predictions = False
+        self.model.eval()
+        for batch in self.dataloader:
+            predictions = self._generate_coco_predictions(batch, threshold)
+            if len(predictions) != 0:
+                are_predictions = True
+                evaluator.update(predictions)
+            
+        if not are_predictions:
+            metrics_dict = {metric: 0.0 for metric in metrics_names}
+            return metrics_dict
+            
+        evaluator.synchronize_between_processes()
+        evaluator.accumulate()
+    
+        # Metrics
+        
+        metrics = self._summarize_metrics(evaluator)
+        return metrics
+
+
