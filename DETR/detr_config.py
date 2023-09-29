@@ -25,8 +25,8 @@ class Config:
     
     
     def set_local_settings():
-        Config.BATCH_SIZE = 2
         Config.LOCAL_ENV = True
+        Config.BATCH_SIZE = 2
         Config.ACCELERATOR = 'cpu'
         Config.DEVICE = 'cpu'
         Config.HYPERPARAMS = [

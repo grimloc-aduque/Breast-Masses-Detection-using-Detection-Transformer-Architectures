@@ -20,7 +20,7 @@ class FileManager:
     
     # Setup: Validation - Training
     
-    def set_validation_fold_setup(self, fold):
+    def set_validation_setup(self, fold):
         self.fold = fold
         self.fold_name = f'fold_{fold}'
         self.dataset_fold_dir = os.path.join(self.dataset_dir, self.fold_name)
