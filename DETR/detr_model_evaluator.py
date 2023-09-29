@@ -21,10 +21,24 @@ class ModelEvaluator:
 
     # Coco Formating
 
+    def generate_predictions(self, batch, threshold):
+        pixel_values = batch["pixel_values"].to(Config.DEVICE)
+        pixel_mask = batch["pixel_mask"].to(Config.DEVICE)
+        labels = [{k: v.to(Config.DEVICE) for k, v in t.items()} for t in batch["labels"]] 
+        with torch.no_grad():
+            outputs = self.model(
+                pixel_values = pixel_values,
+                pixel_mask = pixel_mask
+            )
+        orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
+        results = self.image_processor.post_process_object_detection(
+            outputs, target_sizes=orig_target_sizes, threshold=threshold)
+        predictions = {target['image_id'].item(): output for target, output in zip(labels, results)}
+        return predictions
+
     def _convert_to_xywh(self, boxes):
         xmin, ymin, xmax, ymax = boxes.unbind(1)
         return torch.stack((xmin, ymin, xmax - xmin, ymax - ymin), dim=1)
-
 
     def _prepare_for_coco_detection(self, predictions):
         coco_results = []
@@ -48,24 +62,6 @@ class ModelEvaluator:
             )
         return coco_results
     
-    
-    def _generate_coco_predictions(self, batch, threshold):
-        pixel_values = batch["pixel_values"].to(Config.DEVICE)
-        pixel_mask = batch["pixel_mask"].to(Config.DEVICE)
-        labels = [{k: v.to(Config.DEVICE) for k, v in t.items()} for t in batch["labels"]] 
-        with torch.no_grad():
-            outputs = self.model(
-                pixel_values = pixel_values,
-                pixel_mask = pixel_mask
-            )
-        orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
-        results = self.image_processor.post_process_object_detection(
-            outputs, target_sizes=orig_target_sizes, threshold=threshold)
-        
-        predictions = {target['image_id'].item(): output for target, output in zip(labels, results)}
-        predictions = self._prepare_for_coco_detection(predictions)
-        return predictions
-
 
     # Metrics
 
@@ -91,11 +87,11 @@ class ModelEvaluator:
             coco_gt=self.dataset.coco, 
             iou_types=["bbox"]
         )
-        
         are_predictions = False
         self.model.eval()
         for batch in self.dataloader:
-            predictions = self._generate_coco_predictions(batch, threshold)
+            predictions = self.generate_predictions(batch, threshold)
+            predictions = self._prepare_for_coco_detection(predictions)
             if len(predictions) != 0:
                 are_predictions = True
                 evaluator.update(predictions)

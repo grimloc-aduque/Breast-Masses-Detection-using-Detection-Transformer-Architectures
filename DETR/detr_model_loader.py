@@ -25,7 +25,7 @@ class ModelLoader():
         checkpoints_dir = self.file_manager.get_checkpoints_dir()
         best_checkpoint = [f for f in os.listdir(checkpoints_dir) if 'last' not in f][0]
         checkpoint_path = os.path.join(checkpoints_dir, best_checkpoint)
-        print("Loading: ", checkpoint_path)
+        print("Loading Model: ", checkpoint_path)
         detr = self._load_detr(checkpoint_path)
         model = DETRModel(detr)
         return model
