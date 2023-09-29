@@ -5,14 +5,8 @@ import shutil
 from detr_config import Config
 
 class FileManager:
-    def __init__(self, model_generator):
-        self.model_name = [
-            f'model={model_generator.architecture}',
-            f'queries={model_generator.num_queries}',
-            f'layers={model_generator.transformer_layers}'
-        ]
-        self.model_name = '_'.join(self.model_name)
-        print('Model Name: ', self.model_name)
+    def __init__(self, model_name):
+        self.model_name = model_name
         self.dataset_dir = Config.DATASET
         self.logs_dir = Config.LOGS_DIR
         self.metrics_file = Config.METRICS_FILE
@@ -33,7 +27,7 @@ class FileManager:
         self.version = self.get_fold_version()
         self.checkpoints_dir = self.get_checkpoints_dir()
         
-    def set_training_setup(self):
+    def set_testing_setup(self):
         self.version = self.get_test_version()
         self.checkpoints_dir = self.get_checkpoints_dir()
     

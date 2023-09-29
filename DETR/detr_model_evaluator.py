@@ -13,23 +13,11 @@ STDOUT = sys.stdout
 
 class ModelEvaluator:
 
-    def __init__(self, checkpoints_dir, image_processor, dataset, dataloader):
-        self.checkpoints_dir = checkpoints_dir
-        self.model = self._load_best_model()
+    def __init__(self, model, image_processor, dataset, dataloader):
+        self.model = model
         self.image_processor = image_processor
         self.dataset = dataset
         self.dataloader = dataloader
-
-
-    def _load_best_model(self):
-        best_checkpoint = [f for f in os.listdir(self.checkpoints_dir) if 'last' not in f][0]
-        checkpoint_path = os.path.join(self.checkpoints_dir, best_checkpoint)
-        model = DETRModel.load_from_checkpoint(
-            checkpoint_path = checkpoint_path,
-            map_location = torch.device(Config.DEVICE)
-        )
-        return model
-
 
     # Coco Formating
 
@@ -88,6 +76,7 @@ class ModelEvaluator:
         sys.stdout = STDOUT
         
         metrics = metrics_buffer.getvalue()
+        print(metrics)
         metrics = metrics.split('\n')
         metrics = [m for m in metrics if 'Average' in m]
         metrics_dict = {}

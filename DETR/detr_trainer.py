@@ -22,15 +22,20 @@ def get_trainer(version):
         version = version
     )
 
-    trainer = Trainer(
-        max_epochs = Config.EPOCHS,
-        log_every_n_steps = 5, 
-        callbacks = [
-            checkpoint_callback, 
-            early_stopping_callback
-        ],
-        accelerator = Config.ACCELERATOR,
-        logger = logger
-    )
+    if Config.LOCAL_ENV:
+        trainer = Trainer(
+            max_steps = 1,
+            logger = logger
+        )
+    else:
+        trainer = Trainer(
+            max_epochs = Config.EPOCHS,
+            callbacks = [
+                checkpoint_callback, 
+                early_stopping_callback
+            ],
+            accelerator = Config.ACCELERATOR,
+            logger = logger
+        )
     
     return trainer

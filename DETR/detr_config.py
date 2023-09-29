@@ -21,16 +21,17 @@ class Config:
     EPOCHS = 300
     BATCH_SIZE = 16
     THRESHOLD = 0.01
+    LOCAL_ENV = False
     
     
     def set_local_settings():
-        Config.EPOCHS = 1
-        Config.BATCH_SIZE = 4
+        Config.BATCH_SIZE = 2
+        Config.LOCAL_ENV = True
         Config.ACCELERATOR = 'cpu'
         Config.DEVICE = 'cpu'
         Config.HYPERPARAMS = [
+            ('D-DETR', 300, 6),
             ('DETR', 100, 6),
-            # ('D-DETR', 100, 6)
         ]
 
     def set_cpu_settings():
