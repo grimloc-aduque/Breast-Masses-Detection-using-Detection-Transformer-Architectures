@@ -11,7 +11,7 @@ class Config:
     NUM_CLASSES = 1
     
     MODEL_SIZES = ['yolov8n.pt', 'yolov8s.pt', 'yolov8m.pt']
-    EPOCHS = 300
+    EPOCHS = 200
     BATCH_SIZE = 16
     FOLDS = range(1,11)    
     THRESHOLDS = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
