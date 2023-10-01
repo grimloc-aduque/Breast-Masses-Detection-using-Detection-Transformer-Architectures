@@ -1,23 +1,15 @@
 
 import pandas as pd
-from detr_file_manager import FileManager
-from detr_config import Config
+from yolo_config import Config
+from yolo_file_manager import FileManager
 
-metrics_names =  [
-    'Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]',
-    'Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ]',
-    'Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ]',
-    'Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]',
-    'Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]',
-    'Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ]',
-    'Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ]',
+metrics_names = [
+    'metrics/precision(B)',
+    'metrics/recall(B)',
+    'metrics/mAP50(B)',
+    'metrics/mAP50-95(B)',
+    'fitness'
 ]
-
 
 class MetricsAggregator():
     

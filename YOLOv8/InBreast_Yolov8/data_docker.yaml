@@ -1,0 +1,9 @@
+
+path: /home/YOLOv8/InBreast_Yolov8
+
+train: ./train_valid/images
+val: ./test/images
+test: ./test/images
+
+nc: 1
+names: ['Mass']

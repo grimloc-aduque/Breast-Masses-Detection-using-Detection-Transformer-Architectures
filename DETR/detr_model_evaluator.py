@@ -12,11 +12,9 @@ STDOUT = sys.stdout
 
 class ModelEvaluator:
 
-    def __init__(self, model, image_processor, dataset, dataloader):
+    def __init__(self, model, detr_factory):
         self.model = model
-        self.image_processor = image_processor
-        self.dataset = dataset
-        self.dataloader = dataloader
+        self.image_processor = detr_factory.new_image_processor()
 
     # Coco Formating
 
@@ -71,7 +69,6 @@ class ModelEvaluator:
         sys.stdout = STDOUT
         
         metrics = metrics_buffer.getvalue()
-        print(metrics)
         metrics = metrics.split('\n')
         metrics = [m for m in metrics if 'Average' in m]
         metrics_dict = {}
@@ -81,14 +78,15 @@ class ModelEvaluator:
         return metrics_dict
 
 
-    def get_metrics(self, threshold):
+    def evaluate(self, valid_dataset, valid_loader, threshold):
+        print("Evaluating on threshold: ", threshold)
         evaluator = CocoEvaluator(
-            coco_gt=self.dataset.coco, 
+            coco_gt=valid_dataset.coco, 
             iou_types=["bbox"]
         )
         are_predictions = False
         self.model.eval()
-        for batch in self.dataloader:
+        for batch in valid_loader:
             predictions = self.generate_predictions(batch, threshold)
             predictions = self._prepare_for_coco_detection(predictions)
             if len(predictions) != 0:

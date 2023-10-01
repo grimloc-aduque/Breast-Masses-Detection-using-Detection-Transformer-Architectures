@@ -5,11 +5,12 @@ from detr_dataset import InBreastDataset, collate_fn
 from detr_file_manager import FileManager
 from torch.utils.data import DataLoader
 
+from detr_factory import DETRFactory
 
 class DataSource():
     
-    def __init__(self, image_processor, file_manager:FileManager):
-        self.image_processor = image_processor
+    def __init__(self, detr_factory, file_manager:FileManager):
+        self.image_processor = detr_factory.new_image_processor()
         self.file_manager = file_manager
     
     
@@ -37,17 +38,17 @@ class DataSource():
     
     
     def get_train_dataset_dataloader(self):
-        train_dir = self.file_manager.get_train_dir()
-        return self._get_dataset_dataloader(train_dir)
-        
+        dataset_dir = self.file_manager.get_train_dir()
+        return self._get_dataset_dataloader(dataset_dir)
+    
     def get_valid_dataset_dataloader(self):
-        valid_dir = self.file_manager.get_valid_dir()
-        return self._get_dataset_dataloader(valid_dir)
-        
+        dataset_dir = self.file_manager.get_valid_dir()
+        return self._get_dataset_dataloader(dataset_dir)
+    
     def get_train_valid_dataset_dataloader(self):
-        train_valid_dir = self.file_manager.get_train_valid_dir()
-        return self._get_dataset_dataloader(train_valid_dir)
-        
+        dataset_dir = self.file_manager.get_train_valid_dir()
+        return self._get_dataset_dataloader(dataset_dir)
+    
     def get_test_dataset_dataloader(self):
-        test_dir = self.file_manager.get_test_dir()
-        return self._get_dataset_dataloader(test_dir)
+        dataset_dir = self.file_manager.get_test_dir()
+        return self._get_dataset_dataloader(dataset_dir)
