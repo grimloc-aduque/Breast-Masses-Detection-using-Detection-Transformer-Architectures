@@ -44,7 +44,8 @@ class ModelTrainer():
                     early_stopping_callback
                 ],
                 accelerator = Config.ACCELERATOR,
-                logger = logger
+                logger = logger,
+                log_every_n_steps = 5
             )
             
         trainer.fit(

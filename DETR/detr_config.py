@@ -24,7 +24,7 @@ class Config:
     EPOCHS = 200
     BATCH_SIZE = 16
     FOLDS = range(1,11)
-    THRESHOLDS = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    THRESHOLDS = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     LOCAL_ENV = False
     
     
@@ -32,13 +32,15 @@ class Config:
         Config.LOCAL_ENV = True
         Config.BATCH_SIZE = 4
         Config.FOLDS = [1, 2]
-        Config.THRESHOLDS = [0.001, 0.5]
+        Config.THRESHOLDS = [0.01, 0.5]
         Config.HYPERPARAMS = [
             ('D-DETR', 300, 6),
             ('DETR', 100, 6),
         ]
         
     def set_gpu_settings():
+        Config.NUM_QUERIES = [100]
+        Config.TRANSFORMER_LAYERS = [6]
         gpu_available = torch.cuda.is_available()
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
         Config.DEVICE = 'cuda' if gpu_available else 'cpu'
