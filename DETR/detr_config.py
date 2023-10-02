@@ -39,8 +39,14 @@ class Config:
         ]
         
     def set_gpu_settings():
+        Config.ARCHITECTURES = ['DETR']
         Config.NUM_QUERIES = [100]
         Config.TRANSFORMER_LAYERS = [6]
+        Config.HYPERPARAMS = itertools.product(*[
+            Config.ARCHITECTURES,
+            Config.NUM_QUERIES,
+            Config.TRANSFORMER_LAYERS,
+        ])
         Config.EPOCHS = 6
         gpu_available = torch.cuda.is_available()
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'

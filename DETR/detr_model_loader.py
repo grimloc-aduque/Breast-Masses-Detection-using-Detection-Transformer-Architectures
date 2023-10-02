@@ -24,6 +24,7 @@ class ModelLoader():
         detr = self.detr_factory.new_empty_model()
         model = DETRModel(detr=detr)
         model.load_state_dict(checkpoint['state_dict'])
+        model = model.to(Config.DEVICE)
         return model
     
     def new_pretrained_model(self):
