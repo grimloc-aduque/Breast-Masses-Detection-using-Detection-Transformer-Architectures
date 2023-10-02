@@ -13,8 +13,10 @@ class Config:
     DEVICE = 'cpu'
 
     ARCHITECTURES = ['DETR', 'D-DETR']
-    NUM_QUERIES = [25, 50, 100]
-    TRANSFORMER_LAYERS = [2,4,6]
+    # NUM_QUERIES = [25, 50, 100]
+    # TRANSFORMER_LAYERS = [2,4,6]
+    NUM_QUERIES = [100]
+    TRANSFORMER_LAYERS = [6]
     HYPERPARAMS = itertools.product(*[
         ARCHITECTURES,
         NUM_QUERIES,
@@ -38,15 +40,6 @@ class Config:
         ]
         
     def set_gpu_settings():
-        Config.ARCHITECTURES = ['DETR']
-        Config.NUM_QUERIES = [100]
-        Config.TRANSFORMER_LAYERS = [6]
-        Config.HYPERPARAMS = itertools.product(*[
-            Config.ARCHITECTURES,
-            Config.NUM_QUERIES,
-            Config.TRANSFORMER_LAYERS,
-        ])
-        Config.EPOCHS = 6
         gpu_available = torch.cuda.is_available()
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
         Config.DEVICE = 'cuda' if gpu_available else 'cpu'
