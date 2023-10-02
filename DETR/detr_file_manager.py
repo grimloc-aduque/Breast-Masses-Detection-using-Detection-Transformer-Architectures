@@ -10,7 +10,8 @@ class FileManager:
         self.model_name = detr_factory.get_model_name()
         self.dataset_dir = Config.DATASET
         self.logs_dir = Config.LOGS_DIR
-        self.metrics_file = Config.METRICS_FILE
+        self.metrics_csv_file = Config.METRICS_FILE
+        self.metrics_json_file = Config.METRICS_DICT
     
     # Logs
     
@@ -77,6 +78,9 @@ class FileManager:
         
     # Metrics
     
-    def get_metrics_path(self):
-        return os.path.join(self.logs_dir, self.model_name, self.metrics_file)
+    def get_json_metrics_path(self):
+        return os.path.join(self.logs_dir, self.model_name, self.metrics_json_file)
+    
+    def get_csv_metrics_path(self):
+        return os.path.join(self.logs_dir, self.model_name, self.metrics_csv_file)
     

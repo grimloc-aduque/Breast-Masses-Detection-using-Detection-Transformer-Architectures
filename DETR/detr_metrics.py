@@ -2,6 +2,7 @@
 import pandas as pd
 from detr_file_manager import FileManager
 from detr_config import Config
+import json
 
 metrics_names =  [
     'Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ]',
@@ -40,7 +41,12 @@ class MetricsAggregator():
             mean_metrics = threshold_metrics.mean()
             self.metrics.loc[threshold] = mean_metrics
         
+    def save_partial_metrics(self):
+        metrics_path = self.file_manager.get_json_metrics_path()
+        with open(metrics_path) as f:
+            json.dump(self.metrics_by_threshold, f, indent=4)
+        
     def save_metrics(self):
-        metrics_path = self.file_manager.get_metrics_path()
+        metrics_path = self.file_manager.get_csv_metrics_path()
         self.metrics.to_csv(metrics_path)
         
