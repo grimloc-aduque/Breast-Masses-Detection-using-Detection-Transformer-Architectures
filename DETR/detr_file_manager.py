@@ -11,7 +11,6 @@ class FileManager:
         self.dataset_dir = Config.DATASET
         self.logs_dir = Config.LOGS_DIR
         self.metrics_csv_file = Config.METRICS_FILE
-        self.metrics_json_file = Config.METRICS_DICT
     
     # Logs
     
@@ -77,9 +76,6 @@ class FileManager:
         shutil.rmtree(self.checkpoints_dir)
         
     # Metrics
-    
-    def get_json_metrics_path(self):
-        return os.path.join(self.logs_dir, self.model_name, self.metrics_json_file)
     
     def get_csv_metrics_path(self):
         return os.path.join(self.logs_dir, self.model_name, self.metrics_csv_file)

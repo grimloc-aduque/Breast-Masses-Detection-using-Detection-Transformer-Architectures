@@ -41,11 +41,6 @@ class MetricsAggregator():
             mean_metrics = threshold_metrics.mean()
             self.metrics.loc[threshold] = mean_metrics
         
-    def save_partial_metrics(self):
-        metrics_path = self.file_manager.get_json_metrics_path()
-        with open(metrics_path, 'w') as f:
-            json.dump(self.metrics_by_threshold, f, indent=4)
-        
     def save_metrics(self):
         metrics_path = self.file_manager.get_csv_metrics_path()
         self.metrics.to_csv(metrics_path)

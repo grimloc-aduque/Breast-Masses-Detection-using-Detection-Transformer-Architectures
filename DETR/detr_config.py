@@ -8,7 +8,6 @@ class Config:
     DATASET = 'InBreast_Coco'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
-    METRICS_DICT = 'metrics.json'
     NUM_CLASSES = 1
     ACCELERATOR = 'cpu'
     DEVICE = 'cpu'
