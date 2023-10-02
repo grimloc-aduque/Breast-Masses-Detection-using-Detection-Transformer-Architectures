@@ -43,7 +43,7 @@ class MetricsAggregator():
         
     def save_partial_metrics(self):
         metrics_path = self.file_manager.get_json_metrics_path()
-        with open(metrics_path) as f:
+        with open(metrics_path, 'w') as f:
             json.dump(self.metrics_by_threshold, f, indent=4)
         
     def save_metrics(self):
