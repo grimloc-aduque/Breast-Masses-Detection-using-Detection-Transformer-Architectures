@@ -8,3 +8,5 @@ scikit-learn==1.3.0
 timm
 tensorboard
 coco-eval
+albumentations
+opencv-python

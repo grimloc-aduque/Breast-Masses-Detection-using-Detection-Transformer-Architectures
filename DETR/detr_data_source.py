@@ -4,6 +4,8 @@ from detr_config import Config
 from detr_dataset import InBreastDataset, collate_fn
 from detr_file_manager import FileManager
 from torch.utils.data import DataLoader
+from torchvision import datasets
+
 
 from detr_factory import DETRFactory
 
