@@ -54,7 +54,6 @@ for hyperparams in Config.HYPERPARAMS:
         for threshold in Config.THRESHOLDS:
             valid_metrics = model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
             metrics_aggregator.add_metrics(threshold, valid_metrics)
-        metrics_aggregator.save_partial_metrics()
         
         file_manager.clean_checkpoints()        
         
