@@ -3,7 +3,6 @@
 import os
 import shutil
 from detr_config import Config
-from detr_factory import DETRFactory
 
 class FileManager:
     def __init__(self, detr_factory):
