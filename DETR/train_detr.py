@@ -23,7 +23,7 @@ for hyperparams in Config.HYPERPARAMS:
     model_trainer = ModelTrainer(file_manager)
     metrics_aggregator = MetricsAggregator(file_manager)
     
-    # file_manager.clean_model_logs()
+    file_manager.clean_model_logs()
 
     # -----------------------
     # K-fold Cross Validation
@@ -44,7 +44,7 @@ for hyperparams in Config.HYPERPARAMS:
 
         # Training
 
-        # model_trainer.fit(model, train_loader, valid_loader)
+        model_trainer.fit(model, train_loader, valid_loader)
         
         # Validation - Threshold Optimization
         

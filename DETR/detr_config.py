@@ -41,6 +41,7 @@ class Config:
     def set_gpu_settings():
         Config.NUM_QUERIES = [100]
         Config.TRANSFORMER_LAYERS = [6]
+        Config.EPOCHS = 20
         gpu_available = torch.cuda.is_available()
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
         Config.DEVICE = 'cuda' if gpu_available else 'cpu'
