@@ -5,6 +5,7 @@ import torch
 from detr_model import DETRModel
 from detr_file_manager import FileManager
 from detr_factory import DETRFactory
+from detr_config import Config
 
 
 class ModelLoader():
@@ -14,7 +15,7 @@ class ModelLoader():
         self.file_manager = file_manager
         
     def _load_detr(self, checkpoint_path):
-        checkpoint = torch.load(checkpoint_path)
+        checkpoint = torch.load(checkpoint_path, map_location=Config.DEVICE)
         state_dict = checkpoint['state_dict']
         state_dict = {k.replace('detr.', ''):state_dict[k] for k in state_dict.keys()}
         detr = self.detr_factory.new_empty_model()
