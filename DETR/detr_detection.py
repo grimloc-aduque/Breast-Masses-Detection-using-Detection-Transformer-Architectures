@@ -17,7 +17,7 @@ def plot_annotations(image, target, id2label, ax=None):
     boxes = target['boxes']
     for label, box in zip(class_labels, boxes):
         box = box * 800
-        x_center, y_center ,w ,h = tuple(box)
+        x_center, y_center, w, h = tuple(box)
         x = x_center - w/2
         xf = x_center + w/2
         y = y_center - h/2
