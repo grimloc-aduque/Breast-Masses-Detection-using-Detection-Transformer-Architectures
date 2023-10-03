@@ -54,6 +54,7 @@ for hyperparams in Config.HYPERPARAMS:
             valid_metrics = model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
             metrics_aggregator.add_metrics(threshold, valid_metrics)
         
+        best_model.to('cpu')
         file_manager.clean_checkpoints()        
         
     
