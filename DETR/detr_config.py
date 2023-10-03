@@ -33,7 +33,7 @@ class Config:
         Config.LOCAL_ENV = True
         Config.BATCH_SIZE = 4
         Config.FOLDS = [1, 2]
-        Config.THRESHOLDS = [0.01, 0.5]
+        Config.THRESHOLDS = [0.1]
         Config.HYPERPARAMS = [
             ('D-DETR', 300, 6),
             ('DETR', 100, 6),

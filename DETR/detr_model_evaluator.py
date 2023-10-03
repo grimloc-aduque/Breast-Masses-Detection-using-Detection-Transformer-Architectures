@@ -6,7 +6,6 @@ import torch
 from coco_eval import CocoEvaluator
 from detr_config import Config
 from detr_metrics import metrics_names
-from detr_model import DETRModel
 
 STDOUT = sys.stdout
 
@@ -30,7 +29,7 @@ class ModelEvaluator:
         orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
         results = self.image_processor.post_process_object_detection(
             outputs, target_sizes=orig_target_sizes, threshold=threshold)
-        predictions = {target['image_id'].item(): output for target, output in zip(labels, results)}
+        predictions = {target['image_id'].item():output for target, output in zip(labels, results)}
         return predictions
 
     def _convert_to_xywh(self, boxes):
@@ -42,7 +41,7 @@ class ModelEvaluator:
         for original_id, prediction in predictions.items():
             if len(prediction) == 0:
                 continue
-            boxes = prediction["boxes"]
+            boxes = prediction["boxes"].tolist()
             boxes =  self._convert_to_xywh(boxes).tolist()
             scores = prediction["scores"].tolist()
             labels = prediction["labels"].tolist()
