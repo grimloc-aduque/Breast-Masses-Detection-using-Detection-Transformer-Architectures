@@ -22,7 +22,6 @@ class Config:
     LOCAL_ENV = False
     
     
-    
     def set_local_settings():
         Config.MODEL_SIZES = ['yolov8n.pt']
         Config.EPOCHS = 1
