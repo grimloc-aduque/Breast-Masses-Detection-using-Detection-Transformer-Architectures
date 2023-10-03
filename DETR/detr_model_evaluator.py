@@ -41,7 +41,7 @@ class ModelEvaluator:
         for original_id, prediction in predictions.items():
             if len(prediction) == 0:
                 continue
-            boxes = prediction["boxes"].tolist()
+            boxes = prediction["boxes"]
             boxes =  self._convert_to_xywh(boxes).tolist()
             scores = prediction["scores"].tolist()
             labels = prediction["labels"].tolist()
