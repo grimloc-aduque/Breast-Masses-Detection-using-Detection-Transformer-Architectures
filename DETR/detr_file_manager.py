@@ -23,7 +23,7 @@ class FileManager:
     
     def set_validation_setup(self, fold):
         self.validation_setup = True
-        self.fold = fold
+        self.fold_idx = fold - 1
         self.fold_name = f'fold_{fold}'
         self.dataset_fold_dir = os.path.join(self.dataset_dir, self.fold_name)
         self.version = self.get_version()
@@ -38,15 +38,9 @@ class FileManager:
         return self.fold_name
 
     # Dataset Directories
-    
-    def get_train_dir(self):
-        return os.path.join(self.dataset_fold_dir, 'train')
 
-    def get_valid_dir(self):
-        return os.path.join(self.dataset_fold_dir, 'valid')
-        
-    def get_train_valid_dir(self):
-        return os.path.join(self.dataset_dir, 'train_valid')
+    def get_train_dir(self):
+        return os.path.join(self.dataset_dir, 'train')
         
     def get_test_dir(self):
         return os.path.join(self.dataset_dir, 'test')

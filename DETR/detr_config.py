@@ -23,19 +23,19 @@ class Config:
     
     EPOCHS = 200
     BATCH_SIZE = 16
-    FOLDS = range(1,11)
+    FOLDS = 10
     THRESHOLDS = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     LOCAL_ENV = False
     
     
     def set_local_settings():
         Config.LOCAL_ENV = True
-        Config.BATCH_SIZE = 4
-        Config.FOLDS = [1, 2]
+        Config.BATCH_SIZE = 6
+        Config.FOLDS = 2
         Config.THRESHOLDS = [0.1]
         Config.HYPERPARAMS = [
-            ('D-DETR', 300, 6),
             ('DETR', 100, 6),
+            ('D-DETR', 300, 6),
         ]
         
     def set_gpu_settings():

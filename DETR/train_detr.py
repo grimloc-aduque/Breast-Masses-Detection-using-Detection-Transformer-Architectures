@@ -8,10 +8,12 @@ from detr_metrics import MetricsAggregator
 from detr_model_loader import ModelLoader
 from detr_factory import DETRFactory
 from detr_data_source import DataSource
+from sklearn.model_selection import KFold
+
 
 # %%
-# Config.set_local_settings()
-Config.set_gpu_settings()
+Config.set_local_settings()
+# Config.set_gpu_settings()
 
 for hyperparams in Config.HYPERPARAMS:
     architecture, num_queries, transformer_layers = hyperparams
@@ -27,8 +29,12 @@ for hyperparams in Config.HYPERPARAMS:
     # -----------------------
     # K-fold Cross Validation
     # -----------------------
+    
+    train_dataset = data_source.get_train_dataset()
+    kfold = KFold(n_splits=Config.FOLDS, shuffle=True, random_state=123456)
+    kfold_split = kfold.split(train_dataset.ids)
 
-    for fold in Config.FOLDS:
+    for fold in range(1, Config.FOLDS+1):
 
         file_manager.set_validation_setup(fold)
 
@@ -37,9 +43,9 @@ for hyperparams in Config.HYPERPARAMS:
         model = model_loader.new_pretrained_model()
         
         # Dataset
-                
-        train_dataset, train_loader = data_source.get_train_dataset_dataloader()
-        valid_dataset, valid_loader = data_source.get_valid_dataset_dataloader()
+        train_ids, valid_ids = kfold_split.__next__()
+        train_loader = data_source.get_dataloader(train_dataset, train_ids)
+        valid_loader = data_source.get_dataloader(train_dataset, valid_ids)
 
         # Training
 
@@ -51,10 +57,10 @@ for hyperparams in Config.HYPERPARAMS:
         model_evaluator = ModelEvaluator(best_model, detr_factory)
 
         for threshold in Config.THRESHOLDS:
-            valid_metrics = model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
+            valid_metrics = model_evaluator.evaluate(
+                train_dataset, valid_ids, valid_loader, threshold)
             metrics_aggregator.add_metrics(threshold, valid_metrics)
         
-        best_model.to('cpu')
         file_manager.clean_checkpoints()        
         
     
@@ -79,9 +85,6 @@ for hyperparams in Config.HYPERPARAMS:
     # Training
     
     model_trainer.fit(model, train_valid_loader, test_loader)
-    
-
-# %%
 
 
 

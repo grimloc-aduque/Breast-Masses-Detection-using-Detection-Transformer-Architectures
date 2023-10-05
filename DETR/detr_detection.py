@@ -46,10 +46,10 @@ def plot_predictions(image, predictions, id2label, ax=None):
     boxes = predictions['boxes']
     for score, label, box in zip(scores.tolist(), labels.tolist(), boxes.tolist()):
         (x, y, xf, yf) = box
-        draw.rectangle((x, y, xf, yf), outline='red', width=1)
+        draw.rectangle((x, y, xf, yf), outline='red', width=3)
         text = f'{np.round(score, 2)} - {id2label[label]}'
         draw.text((x, y), text, fill='black', 
-                  font=ImageFont.truetype("arial.ttf", 18))
+                  font=ImageFont.truetype("arial.ttf", 22))
 
     if ax == None:
         fig, ax = plt.subplots(figsize=(3, 3))

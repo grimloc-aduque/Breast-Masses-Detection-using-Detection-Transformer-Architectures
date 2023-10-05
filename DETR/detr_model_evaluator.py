@@ -6,6 +6,7 @@ import torch
 from coco_eval import CocoEvaluator
 from detr_config import Config
 from detr_metrics import metrics_names
+import copy
 
 STDOUT = sys.stdout
 
@@ -77,12 +78,19 @@ class ModelEvaluator:
         return metrics_dict
 
 
-    def evaluate(self, valid_dataset, valid_loader, threshold):
+    def evaluate(self, train_dataset, valid_ids, valid_loader, threshold):
         print("Evaluating on threshold: ", threshold)
+        # Subset Train Dataset
+        valid_dataset = copy.deepcopy(train_dataset)
+        valid_dataset.coco.imgs = {
+            k:v for k,v in valid_dataset.coco.imgs.items() 
+            if k in valid_ids
+        }
         evaluator = CocoEvaluator(
             coco_gt=valid_dataset.coco, 
             iou_types=["bbox"]
         )
+        # Evaluate Coco Predictions
         are_predictions = False
         self.model.eval()
         for batch in valid_loader:
