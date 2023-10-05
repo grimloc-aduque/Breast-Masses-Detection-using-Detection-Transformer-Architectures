@@ -43,6 +43,6 @@ class Config:
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
         Config.DEVICE = 'cuda' if gpu_available else 'cpu'
         Config.HYPERPARAMS = [
-            ('D-DETR', 100, 6),
+            # ('D-DETR', 100, 6),
             ('DETR', 100, 6),
         ]

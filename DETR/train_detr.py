@@ -12,8 +12,8 @@ from sklearn.model_selection import KFold
 
 
 # %%
-Config.set_local_settings()
-# Config.set_gpu_settings()
+# Config.set_local_settings()
+Config.set_gpu_settings()
 
 for hyperparams in Config.HYPERPARAMS:
     architecture, num_queries, transformer_layers = hyperparams
