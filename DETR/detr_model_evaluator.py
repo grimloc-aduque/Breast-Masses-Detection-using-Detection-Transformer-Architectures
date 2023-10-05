@@ -78,14 +78,8 @@ class ModelEvaluator:
         return metrics_dict
 
 
-    def evaluate(self, train_dataset, valid_ids, valid_loader, threshold):
+    def evaluate(self, valid_dataset, valid_loader, threshold):
         print("Evaluating on threshold: ", threshold)
-        # Subset Train Dataset
-        valid_dataset = copy.deepcopy(train_dataset)
-        valid_dataset.coco.imgs = {
-            k:v for k,v in valid_dataset.coco.imgs.items() 
-            if k in valid_ids
-        }
         evaluator = CocoEvaluator(
             coco_gt=valid_dataset.coco, 
             iou_types=["bbox"]

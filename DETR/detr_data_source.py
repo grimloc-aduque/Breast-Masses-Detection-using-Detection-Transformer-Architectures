@@ -5,7 +5,7 @@ from detr_dataset import InBreastDataset, collate_fn
 from detr_file_manager import FileManager
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
-
+import copy
 
 class DataSource():
     
@@ -43,6 +43,15 @@ class DataSource():
     def get_train_dataset(self):
         dataset_dir = self.file_manager.get_train_dir()
         return self._get_dataset(dataset_dir, data_augmentation=True)
+    
+    def get_valid_dataset(self, train_dataset, valid_ids):
+        valid_dataset = copy.deepcopy(train_dataset)
+        valid_dataset.coco.imgs = {
+            k:v for k,v in valid_dataset.coco.imgs.items() 
+            if k in valid_ids
+        }
+        valid_dataset.data_augmentation = False
+        return valid_dataset
     
     def get_test_dataset(self):
         dataset_dir = self.file_manager.get_test_dir()
