@@ -31,11 +31,11 @@ class Config:
     def set_local_settings():
         Config.LOCAL_ENV = True
         Config.BATCH_SIZE = 6
-        Config.FOLDS = 2
+        Config.FOLDS = 10
         Config.THRESHOLDS = [0.1]
         Config.HYPERPARAMS = [
             ('DETR', 100, 6),
-            ('D-DETR', 300, 6),
+            # ('D-DETR', 100, 6),
         ]
         
     def set_gpu_settings():

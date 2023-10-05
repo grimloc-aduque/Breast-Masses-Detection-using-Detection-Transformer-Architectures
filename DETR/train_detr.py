@@ -34,16 +34,16 @@ for hyperparams in Config.HYPERPARAMS:
     kfold = KFold(n_splits=Config.FOLDS, shuffle=True, random_state=123456)
     kfold_split = kfold.split(train_dataset.ids)
 
-    for fold in range(1, Config.FOLDS+1):
+    for i, train_valid_split in enumerate(kfold_split):
 
-        file_manager.set_validation_setup(fold)
+        file_manager.set_validation_setup(fold=i+1)
 
         # Model
         
         model = model_loader.new_pretrained_model()
         
         # Dataset
-        train_ids, valid_ids = kfold_split.__next__()
+        train_ids, valid_ids = train_valid_split
         train_loader = data_source.get_dataloader(train_dataset, train_ids)
         valid_loader = data_source.get_dataloader(train_dataset, valid_ids)
 
@@ -79,12 +79,16 @@ for hyperparams in Config.HYPERPARAMS:
     
     file_manager.set_testing_setup()
 
-    train_valid_dataset, train_valid_loader = data_source.get_train_valid_dataset_dataloader()
-    test_dataset, test_loader = data_source.get_test_dataset_dataloader()
+    train_valid_loader = data_source.get_dataloader(train_dataset)
+    test_dataset = data_source.get_test_dataset()
+    test_loader = data_source.get_dataloader(test_dataset)
     
     # Training
     
     model_trainer.fit(model, train_valid_loader, test_loader)
+
+
+# %%
 
 
 
