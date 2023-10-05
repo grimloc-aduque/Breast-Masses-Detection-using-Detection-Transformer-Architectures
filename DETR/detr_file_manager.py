@@ -23,7 +23,6 @@ class FileManager:
     
     def set_validation_setup(self, fold):
         self.validation_setup = True
-        self.fold_idx = fold - 1
         self.fold_name = f'fold_{fold}'
         self.dataset_fold_dir = os.path.join(self.dataset_dir, self.fold_name)
         self.version = self.get_version()
