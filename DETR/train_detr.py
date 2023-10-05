@@ -44,8 +44,10 @@ for hyperparams in Config.HYPERPARAMS:
         
         # Dataset
         train_ids, valid_ids = train_valid_split
+        valid_dataset = data_source.get_valid_dataset(train_dataset, valid_ids)
+        
         train_loader = data_source.get_dataloader(train_dataset, train_ids)
-        valid_loader = data_source.get_dataloader(train_dataset, valid_ids)
+        valid_loader = data_source.get_dataloader(valid_dataset, valid_ids)
 
         # Training
 
@@ -57,8 +59,7 @@ for hyperparams in Config.HYPERPARAMS:
         model_evaluator = ModelEvaluator(best_model, detr_factory)
 
         for threshold in Config.THRESHOLDS:
-            valid_metrics = model_evaluator.evaluate(
-                train_dataset, valid_ids, valid_loader, threshold)
+            valid_metrics = model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
             metrics_aggregator.add_metrics(threshold, valid_metrics)
         
         file_manager.clean_checkpoints()        
