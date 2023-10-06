@@ -75,15 +75,15 @@ class InBreastDataset(torchvision.datasets.CocoDetection):
         
 
     def __getitem__(self, idx):
-        image, annotations = super().__getitem__(idx)
+        image, annotations = super().__getitem__(idx) # bbox: (x_min, y_min, w, h)
         if self.data_augmentation:
             image, annotations = self.image_transformation(image, annotations)
         image_id = self.ids[idx]
         annotations = {'image_id': image_id, 'annotations': annotations}
         encoding = self.processor(images=image, annotations=annotations, return_tensors="pt")
         image = encoding['pixel_values'][0]
-        target = encoding["labels"][0]
-        return image, target
+        labels = encoding["labels"][0]
+        return image, labels # bbox: (x_center, y_center, w, h)
 
 
 def collate_fn(batch, image_processor):

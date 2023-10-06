@@ -27,11 +27,11 @@ class ModelEvaluator:
                 pixel_values = pixel_values,
                 pixel_mask = pixel_mask
             )
-        orig_target_sizes = torch.stack([target["orig_size"] for target in labels], dim=0)        
+        orig_target_sizes = torch.stack([label["orig_size"] for label in labels], dim=0)        
         results = self.image_processor.post_process_object_detection(
             outputs, target_sizes=orig_target_sizes, threshold=threshold)
-        predictions = {target['image_id'].item():output for target, output in zip(labels, results)}
-        return predictions
+        predictions = {label['image_id'].item():output for label, output in zip(labels, results)}
+        return predictions # bbox: (x_min, y_min, x_max, y_max)
 
     def _convert_to_xywh(self, boxes):
         xmin, ymin, xmax, ymax = boxes.unbind(1)

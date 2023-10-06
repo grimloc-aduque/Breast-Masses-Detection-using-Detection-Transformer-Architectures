@@ -1,0 +1,67 @@
+{
+    "categories": [
+        {
+            "id": 0,
+            "name": "Mass",
+            "supercategory": "none"
+        }
+    ],
+    "images": [
+        {
+            "id": 0,
+            "file_name": "00694_RIGHT_CC.jpg",
+            "height": 800,
+            "width": 800
+        },
+        {
+            "id": 1,
+            "file_name": "00694_RIGHT_MLO.jpg",
+            "height": 800,
+            "width": 800
+        },
+        {
+            "id": 2,
+            "file_name": "00695_RIGHT_CC.jpg",
+            "height": 800,
+            "width": 800
+        }
+    ],
+    "annotations": [
+        {
+            "id": 0,
+            "image_id": 0,
+            "category_id": 0,
+            "bbox": [
+                645.95,
+                396.33,
+                129.97,
+                67.34
+            ],
+            "area": 8752.18
+        },
+        {
+            "id": 1,
+            "image_id": 1,
+            "category_id": 0,
+            "bbox": [
+                452.93,
+                322.08,
+                120.6,
+                48.71
+            ],
+            "area": 5874.43
+        },
+        {
+            "id": 2,
+            "image_id": 2,
+            "category_id": 0,
+            "bbox": [
+                560.16,
+                240.78,
+                220.71,
+                170.74
+            ],
+            "area": 37684.03
+        }
+    ]
+}

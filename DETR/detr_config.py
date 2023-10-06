@@ -1,25 +1,14 @@
 
-import itertools
-
 import torch
 
 
 class Config:
-    DATASET = 'InBreast_Coco'
+    DATASET = 'InBreast-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     NUM_CLASSES = 1
     ACCELERATOR = 'cpu'
     DEVICE = 'cpu'
-
-    # ARCHITECTURES = ['DETR', 'D-DETR']
-    # NUM_QUERIES = [25, 50, 100]
-    # TRANSFORMER_LAYERS = [2,4,6]
-    # HYPERPARAMS = itertools.product(*[
-    #     ARCHITECTURES,
-    #     NUM_QUERIES,
-    #     TRANSFORMER_LAYERS,
-    # ])
     
     EPOCHS = 200
     BATCH_SIZE = 16
@@ -32,7 +21,7 @@ class Config:
         Config.LOCAL_ENV = True
         Config.BATCH_SIZE = 6
         Config.FOLDS = 10
-        Config.THRESHOLDS = [0.1]
+        Config.THRESHOLDS = [0.001]
         Config.HYPERPARAMS = [
             ('DETR', 100, 6),
             # ('D-DETR', 100, 6),

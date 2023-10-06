@@ -22,13 +22,12 @@ class DataSource():
         )
         return dataset
             
-    def get_dataloader(self, dataset, dataset_ids=[]):
+    def get_dataloader(self, dataset, dataset_ids=[], shuffle=False):
         if len(dataset_ids)>0:
             sampler = SubsetRandomSampler(indices=dataset_ids)
             shuffle = False
         else:
             sampler = None
-            shuffle = True
         
         dataloader = DataLoader(
             dataset=dataset,

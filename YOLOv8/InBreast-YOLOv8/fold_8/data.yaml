@@ -1,0 +1,10 @@
+
+path: C:/Users/Alejandro Duque/Documents/USFQ/Proyecto Integrador/Workspace/YOLOv8/InBreast_Yolov8
+
+train: ./fold_8/train/images
+val: ./fold_8/valid/images
+test: ./test/images
+
+nc: 1
+names: ['Mass']
+    

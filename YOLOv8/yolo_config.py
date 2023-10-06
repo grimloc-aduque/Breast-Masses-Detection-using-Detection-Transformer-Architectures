@@ -5,7 +5,7 @@ import torch
 
 class Config:
     ROOT = 'YOLOv8'
-    DATASET = 'InBreast_Yolov8'
+    DATASET = 'InBreast_YOLOv8'
     RUNS_DIR = 'runs_usfq_server_06_fixed_bbox'
     DEVICE = 'cpu'
     NUM_CLASSES = 1
