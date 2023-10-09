@@ -12,8 +12,7 @@ Config.set_local_settings()
 # Config.set_gpu_settings()
 
 for hyperparams in Config.HYPERPARAMS:
-    architecture, d_model, num_queries, transformer_layers = hyperparams
-    detr_factory = DETRFactory(architecture, d_model, num_queries, transformer_layers)    
+    detr_factory = DETRFactory(*hyperparams)    
     file_manager = FileManager(detr_factory)
     data_source = DataSource(detr_factory, file_manager)
     model_loader = ModelLoader(detr_factory, file_manager)
@@ -82,7 +81,7 @@ for hyperparams in Config.HYPERPARAMS:
     # Testing
         
     best_model = model_loader.load_best_model()
-    model_evaluator = ModelEvaluator(best_model, detr_factory)
+    model_evaluator = ModelEvaluator(best_model, detr_factory, plotter)
     
     for threshold in Config.THRESHOLDS:
         model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
