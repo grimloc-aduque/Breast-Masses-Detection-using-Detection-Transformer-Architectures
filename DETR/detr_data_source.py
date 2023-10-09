@@ -27,7 +27,7 @@ class DataSource():
         )
         return dataset
             
-    def _get_dataloader(self, dataset, indices=[]):
+    def _get_dataloader(self, dataset, indices=[], shuffle=False):
         if len(indices)>0:
             sampler = SubsetRandomSampler(indices=indices)
         else:
@@ -38,6 +38,7 @@ class DataSource():
             batch_size=Config.BATCH_SIZE,
             collate_fn=lambda batch: 
                             collate_fn(batch, self.image_processor),
+            shuffle=shuffle,
             sampler=sampler
         )
         return dataloader
@@ -102,7 +103,8 @@ class DataSource():
         self.file_manager.set_testing_setup()
         train_dataset = copy.deepcopy(self.train_dataset)
         train_loader = self._get_dataloader(
-            dataset=train_dataset
+            dataset=train_dataset,
+            shuffle=True
         )
         test_dataset = self._get_test_dataset()
         test_loader = self._get_dataloader(
