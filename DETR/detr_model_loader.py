@@ -20,7 +20,7 @@ class ModelLoader():
         best_checkpoint = [f for f in os.listdir(checkpoints_dir) if 'last' not in f][0]
         checkpoint_path = os.path.join(checkpoints_dir, best_checkpoint)
         checkpoint = torch.load(checkpoint_path, map_location=Config.DEVICE)
-        print(Fore.YELLOW, "Loading Model: ", checkpoint_path, Fore.WHITE)
+        print(Fore.LIGHTBLUE_EX, "Loading Model: ", checkpoint_path, Fore.WHITE)
         
         detr = self.detr_factory.new_empty_model()
         model = DETRModel(detr=detr)
@@ -29,7 +29,7 @@ class ModelLoader():
         return model
     
     def new_pretrained_model(self):
-        print(Fore.YELLOW, 'New Model: ', self.detr_factory.get_model_name(), Fore.WHITE)
+        print(Fore.LIGHTBLUE_EX, 'New Model: ', self.detr_factory.get_model_name(), Fore.WHITE)
         detr = self.detr_factory.new_pretrained_model()
         model = DETRModel(detr)
         return model

@@ -1,18 +1,18 @@
 
 import torch
 
-gpu_available = torch.cuda.is_available()
 
 class Config:
     
+    GPU_AVAILABLE = torch.cuda.is_available()
     DATASET = 'InBreast-COCO'
     # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     METRIC_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
-    ACCELERATOR = 'gpu' if gpu_available else 'cpu'
-    DEVICE = 'cuda' if gpu_available else 'cpu'
+    ACCELERATOR = 'gpu' if GPU_AVAILABLE else 'cpu'
+    DEVICE = 'cuda' if GPU_AVAILABLE else 'cpu'
     
     EPOCHS = 200
     BATCH_SIZE = 16

@@ -21,11 +21,12 @@ if __name__ == '__main__':
     
     args = parser.parse_args() 
     if args.local:
-        print(Fore.LIGHTBLUE_EX, "Loading Configuration: Local", Fore.WHITE)
+        print(Fore.YELLOW, "Loading Configuration: Local", Fore.WHITE)
         Config.set_local_settings()
     else:
-        print(Fore.LIGHTBLUE_EX, "Loading Configuration: GPU", Fore.WHITE)
+        print(Fore.YELLOW, "Loading Configuration: GPU", Fore.WHITE)
         Config.set_gpu_settings()
+        print(Fore.YELLOW, "GPU Available: ", Config.GPU_AVAILABLE, Fore.WHITE)
     
     # -----------------------
     # Hyperparameter Search
