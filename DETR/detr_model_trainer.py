@@ -33,7 +33,7 @@ class ModelTrainer():
 
         if Config.LOCAL_ENV:
             trainer = Trainer(
-                max_steps = 1,
+                max_steps = Config.STEPS,
                 logger = logger
             )
         else:
