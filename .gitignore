@@ -1,14 +1,8 @@
 
 # External code
-DINO/
-DINO/*
-
-detr-facebook/
-detr-facebook/*
 
 Otros/
 Otros/*
-
 
 # Run files
 YOLOv8/runs_*
