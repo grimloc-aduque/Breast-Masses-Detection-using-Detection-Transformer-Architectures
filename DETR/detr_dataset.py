@@ -12,7 +12,7 @@ class InBreastDataset(torchvision.datasets.CocoDetection):
     
     def __init__(self, dataset_dir, processor, data_augmentation):
         annotation_file_path = os.path.join(dataset_dir, '_annotations.coco.json')
-        print(Fore.GREEN, "Loading Annotations from: ", annotation_file_path, Fore.WHITE)
+        print(Fore.GREEN, "Loading Annotations: ", annotation_file_path, Fore.WHITE)
         super().__init__(dataset_dir, annotation_file_path)
         self.processor = processor
         self.data_augmentation = data_augmentation

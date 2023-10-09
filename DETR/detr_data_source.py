@@ -2,13 +2,12 @@
 
 import copy
 
-from sklearn.model_selection import KFold
-from torch.utils.data import DataLoader
-from torch.utils.data.sampler import SubsetRandomSampler
-
 from detr_config import Config
 from detr_dataset import InBreastDataset, collate_fn
 from detr_file_manager import FileManager
+from sklearn.model_selection import KFold
+from torch.utils.data import DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
 
 
 class DataSource():
@@ -31,17 +30,14 @@ class DataSource():
     def _get_dataloader(self, dataset, indices=[]):
         if len(indices)>0:
             sampler = SubsetRandomSampler(indices=indices)
-            shuffle = False
         else:
             sampler = None
-            shuffle = True
         
         dataloader = DataLoader(
             dataset=dataset,
             batch_size=Config.BATCH_SIZE,
             collate_fn=lambda batch: 
                             collate_fn(batch, self.image_processor),
-            shuffle=shuffle,
             sampler=sampler
         )
         return dataloader

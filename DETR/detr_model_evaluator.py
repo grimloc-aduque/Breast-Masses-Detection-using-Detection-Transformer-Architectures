@@ -1,12 +1,10 @@
 
 import sys
 from io import StringIO
-from colorama import Fore
-
 
 import torch
 from coco_eval import CocoEvaluator
-
+from colorama import Fore
 from detr_config import Config
 from detr_factory import DETRFactory
 from detr_metrics import metrics_names
@@ -96,7 +94,8 @@ class ModelEvaluator:
             predictions = self.generate_predictions(batch, threshold)
             
             # Plots
-            self.plotter.plot_batch_comparison(predictions, valid_dataset, threshold, batch_id)
+            if batch_id == 0 or batch_id == len(valid_loader) - 1:
+                self.plotter.plot_batch_comparison(predictions, valid_dataset, threshold, batch_id)
             
             predictions = self._prepare_for_coco_detection(predictions)
             if len(predictions) != 0:

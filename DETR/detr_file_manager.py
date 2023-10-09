@@ -2,9 +2,8 @@
 
 import os
 import shutil
+
 from colorama import Fore
-
-
 from detr_config import Config
 
 
@@ -73,7 +72,7 @@ class FileManager:
     # Metrics and plots
     
     def get_detection_plot_path(self, threshold, batch_id):
-        plots_threshold_dir = os.path.join(self.version_dir, f'threshold={threshold}')
+        plots_threshold_dir = os.path.join(self.version_dir, 'detections', f'threshold={threshold}')
         os.makedirs(plots_threshold_dir, exist_ok=True)
         file_name = f'batch_{batch_id}.png'
         return os.path.join(plots_threshold_dir, file_name)

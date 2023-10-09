@@ -1,9 +1,8 @@
 
 import pytorch_lightning as pl
-from pytorch_lightning import Trainer
-
 from detr_config import Config
 from detr_file_manager import FileManager
+from pytorch_lightning import Trainer
 
 
 class ModelTrainer():
@@ -22,7 +21,7 @@ class ModelTrainer():
 
         early_stopping_callback = pl.callbacks.EarlyStopping(
             monitor = 'valid_loss',
-            patience = 40
+            patience = 30
         )
 
         version = self.file_manager.get_version()

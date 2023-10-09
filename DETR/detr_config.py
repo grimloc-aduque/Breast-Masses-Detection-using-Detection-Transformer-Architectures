@@ -1,6 +1,7 @@
 
 import torch
 
+gpu_available = torch.cuda.is_available()
 
 class Config:
     
@@ -10,8 +11,8 @@ class Config:
     METRICS_FILE = 'metrics.csv'
     METRIC_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
-    ACCELERATOR = 'cpu'
-    DEVICE = 'cpu'
+    ACCELERATOR = 'gpu' if gpu_available else 'cpu'
+    DEVICE = 'cuda' if gpu_available else 'cpu'
     
     EPOCHS = 200
     BATCH_SIZE = 16
@@ -22,8 +23,8 @@ class Config:
     
     def set_local_settings():
         Config.LOCAL_ENV = True
-        Config.BATCH_SIZE = 12
-        Config.FOLDS = 3
+        Config.BATCH_SIZE = 8
+        Config.FOLDS = 2
         Config.THRESHOLDS = [0.001, 0.1]
         Config.HYPERPARAMS = [
             ('DETR', 256, 100, 6),
@@ -31,9 +32,6 @@ class Config:
         ]
         
     def set_gpu_settings():
-        gpu_available = torch.cuda.is_available()
-        Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
-        Config.DEVICE = 'cuda' if gpu_available else 'cpu'
         Config.HYPERPARAMS = [
             # ('D-DETR', 256, 100, 6),
             ('DETR', 256, 100, 6),
