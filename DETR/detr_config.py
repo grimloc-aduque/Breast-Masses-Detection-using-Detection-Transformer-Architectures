@@ -5,8 +5,8 @@ import torch
 class Config:
     
     GPU_AVAILABLE = torch.cuda.is_available()
-    # DATASET = 'InBreast-COCO'
-    DATASET = 'DDSM-COCO'
+    DATASET = 'InBreast-COCO'
+    # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     METRIC_PLOT = 'plot_metrics.png'
