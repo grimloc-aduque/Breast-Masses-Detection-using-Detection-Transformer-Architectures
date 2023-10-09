@@ -1,6 +1,8 @@
 
 import sys
 from io import StringIO
+from colorama import Fore
+
 
 import torch
 from coco_eval import CocoEvaluator
@@ -82,7 +84,7 @@ class ModelEvaluator:
 
 
     def evaluate(self, valid_dataset, valid_loader, threshold):
-        print("Evaluating on threshold: ", threshold)
+        print(Fore.MAGENTA, "Evaluating on threshold: ", threshold, Fore.WHITE)
         evaluator = CocoEvaluator(
             coco_gt=valid_dataset.coco, 
             iou_types=["bbox"]

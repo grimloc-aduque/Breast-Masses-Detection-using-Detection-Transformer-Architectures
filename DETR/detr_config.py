@@ -23,8 +23,8 @@ class Config:
     def set_local_settings():
         Config.LOCAL_ENV = True
         Config.BATCH_SIZE = 12
-        Config.FOLDS = 2
-        Config.THRESHOLDS = [0.001, 0.1]
+        Config.FOLDS = 3
+        Config.THRESHOLDS = [0.001, 0.1, 0.2]
         Config.HYPERPARAMS = [
             ('DETR', 256, 100, 6),
             # ('D-DETR', 256, 100, 6),

@@ -2,6 +2,8 @@
 
 import os
 import shutil
+from colorama import Fore
+
 
 from detr_config import Config
 
@@ -18,7 +20,7 @@ class FileManager:
     
     def clean_model_logs(self):
         self.model_logs_dir = os.path.join(self.logs_dir, self.dataset_dir, self.model_name)
-        print("Cleaning Logs: ", self.model_logs_dir)
+        print(Fore.RED, "Cleaning Logs: ", self.model_logs_dir, Fore.WHITE)
         if os.path.exists(self.model_logs_dir):
             shutil.rmtree(self.model_logs_dir)
     
@@ -57,7 +59,7 @@ class FileManager:
         return os.path.join(self.dataset_dir, self.model_name, 'test')
     
     def get_version(self):
-        return self._get_fold_version() if self.validation_setup else self._get_test_version()
+        return self.version
     
     # Pretrained Checkpoints
         
@@ -65,7 +67,7 @@ class FileManager:
         return os.path.join(self.version_dir, 'checkpoints')
     
     def clean_checkpoints(self):
-        print("Cleaning Checkpoints: ", self.checkpoints_dir)
+        print(Fore.RED, "Cleaning Checkpoints: ", self.checkpoints_dir, Fore.WHITE)
         shutil.rmtree(self.checkpoints_dir)
         
     # Metrics and plots
