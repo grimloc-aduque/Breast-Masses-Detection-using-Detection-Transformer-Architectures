@@ -105,6 +105,6 @@ if __name__ == '__main__':
         model_evaluator = ModelEvaluator(best_model, detr_factory, plotter)
         
         for threshold in Config.THRESHOLDS:
-            model_evaluator.evaluate(valid_dataset, valid_loader, threshold)
+            model_evaluator.evaluate(test_dataset, test_loader, threshold)
 
 
