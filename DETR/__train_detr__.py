@@ -1,4 +1,3 @@
-
 from detr_config import Config
 from detr_data_source import DataSource
 from detr_factory import DETRFactory
