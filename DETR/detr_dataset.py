@@ -66,9 +66,7 @@ class InBreastDataset(torchvision.datasets.CocoDetection):
                     'image_id': image_id,
                     'category_id': category_id,
                     'bbox':  bbox,
-                    'area': area,
-                    'segmentation': [],
-                    'iscrowd': 0
+                    'area': area
                 }
             )
         return transformed_image, transformed_annotations

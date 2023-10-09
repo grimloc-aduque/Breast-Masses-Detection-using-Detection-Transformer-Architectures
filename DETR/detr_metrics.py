@@ -1,5 +1,6 @@
 
 import pandas as pd
+
 from detr_config import Config
 from detr_file_manager import FileManager
 

@@ -4,17 +4,20 @@ from io import StringIO
 
 import torch
 from coco_eval import CocoEvaluator
+
 from detr_config import Config
+from detr_factory import DETRFactory
 from detr_metrics import metrics_names
-import copy
+from detr_plotter import Plotter
 
 STDOUT = sys.stdout
 
 class ModelEvaluator:
 
-    def __init__(self, model, detr_factory):
+    def __init__(self, model, detr_factory:DETRFactory, plotter:Plotter):
         self.model = model
         self.image_processor = detr_factory.new_image_processor()
+        self.plotter = plotter
 
     # Coco Formating
 
@@ -85,16 +88,20 @@ class ModelEvaluator:
             iou_types=["bbox"]
         )
         # Evaluate Coco Predictions
-        are_predictions = False
+        empty_predictions = True
         self.model.eval()
-        for batch in valid_loader:
+        for batch_id, batch in enumerate(valid_loader):
             predictions = self.generate_predictions(batch, threshold)
+            
+            # Plots
+            self.plotter.plot_batch_comparison(predictions, valid_dataset, threshold, batch_id)
+            
             predictions = self._prepare_for_coco_detection(predictions)
             if len(predictions) != 0:
-                are_predictions = True
+                empty_predictions = False
                 evaluator.update(predictions)
             
-        if not are_predictions:
+        if empty_predictions:
             metrics_dict = {metric: 0.0 for metric in metrics_names}
             return metrics_dict
             

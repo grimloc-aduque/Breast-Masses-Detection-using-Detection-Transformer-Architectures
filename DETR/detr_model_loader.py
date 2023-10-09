@@ -2,10 +2,11 @@
 import os
 
 import torch
-from detr_model import DETRModel
-from detr_file_manager import FileManager
-from detr_factory import DETRFactory
+
 from detr_config import Config
+from detr_factory import DETRFactory
+from detr_file_manager import FileManager
+from detr_model import DETRModel
 
 
 class ModelLoader():

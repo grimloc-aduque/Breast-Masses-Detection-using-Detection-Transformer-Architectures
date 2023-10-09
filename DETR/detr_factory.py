@@ -1,15 +1,17 @@
 
 import pytorch_lightning as pl
 import torch
-from detr_config import Config
 from transformers import (DeformableDetrConfig,
                           DeformableDetrForObjectDetection,
                           DeformableDetrImageProcessor, DetrConfig,
                           DetrForObjectDetection, DetrImageProcessor)
 
+from detr_config import Config
+
+
 class DETRFactory:
     
-    def __init__(self, architecture, num_queries, transformer_layers):        
+    def __init__(self, architecture, d_model, num_queries, transformer_layers):        
         # DETR or Deformable DETR
         if architecture == 'DETR':
             self.IMG_PROCESSOR = DetrImageProcessor
@@ -25,8 +27,9 @@ class DETRFactory:
             raise Exception('Architecture not suported')
         
         self.architecture = architecture
-        self.transformer_layers = transformer_layers
+        self.d_model = d_model
         self.num_queries = num_queries
+        self.transformer_layers = transformer_layers
         self.init_model_name()
         self.init_config()
         
@@ -35,6 +38,7 @@ class DETRFactory:
     def init_model_name(self):
         self.model_name = [
             f'model={self.architecture}',
+            f'dim={self.d_model}',
             f'queries={self.num_queries}',
             f'layers={self.transformer_layers}'
         ]
@@ -42,13 +46,14 @@ class DETRFactory:
         
     def init_config(self):
         self.config = self.DETR_CONFIG(
-            pretrained_model_name_or_path = self.checkpoint,
-            num_labels = Config.NUM_CLASSES,
-            id2label = {0:'Mass'}, 
-            label2id = {'Mass': 0},
-            encoder_layers = self.transformer_layers,
-            decoder_layers = self.transformer_layers,
-            num_queries = self.num_queries,
+            pretrained_model_name_or_path=self.checkpoint,
+            num_labels=Config.NUM_CLASSES,
+            id2label={0:'Mass'}, 
+            label2id={'Mass': 0},
+            encoder_layers=self.transformer_layers,
+            decoder_layers=self.transformer_layers,
+            num_queries=self.num_queries,
+            d_model=self.d_model
         )
 
     # DETR Factory Methods

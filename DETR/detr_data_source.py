@@ -1,19 +1,25 @@
 
 
+import copy
+
+from sklearn.model_selection import KFold
+from torch.utils.data import DataLoader
+from torch.utils.data.sampler import SubsetRandomSampler
+
 from detr_config import Config
 from detr_dataset import InBreastDataset, collate_fn
 from detr_file_manager import FileManager
-from torch.utils.data import DataLoader
-from torch.utils.data.sampler import SubsetRandomSampler
-import copy
+
 
 class DataSource():
     
     def __init__(self, detr_factory, file_manager:FileManager):
         self.image_processor = detr_factory.new_image_processor()
         self.file_manager = file_manager
-    
-    
+        self.train_dataset = self._get_train_dataset()
+
+    # Dataset and Dataloader
+
     def _get_dataset(self, dataset_dir, data_augmentation):
         dataset = InBreastDataset(
             dataset_dir = dataset_dir,
@@ -22,12 +28,13 @@ class DataSource():
         )
         return dataset
             
-    def get_dataloader(self, dataset, dataset_ids=[], shuffle=False):
-        if len(dataset_ids)>0:
-            sampler = SubsetRandomSampler(indices=dataset_ids)
+    def _get_dataloader(self, dataset, indices=[]):
+        if len(indices)>0:
+            sampler = SubsetRandomSampler(indices=indices)
             shuffle = False
         else:
             sampler = None
+            shuffle = True
         
         dataloader = DataLoader(
             dataset=dataset,
@@ -39,19 +46,72 @@ class DataSource():
         )
         return dataloader
     
-    def get_train_dataset(self):
-        dataset_dir = self.file_manager.get_train_dir()
-        return self._get_dataset(dataset_dir, data_augmentation=True)
+    # Train and Test Datasets
     
-    def get_valid_dataset(self, train_dataset, valid_ids):
-        valid_dataset = copy.deepcopy(train_dataset)
+    def _get_train_dataset(self):
+        train_dir = self.file_manager.get_train_dir()
+        dataset = self._get_dataset(
+            dataset_dir=train_dir, 
+            data_augmentation=True
+        )
+        return dataset
+    
+    def _get_test_dataset(self):
+        test_dir = self.file_manager.get_test_dir()
+        test_dataset = self._get_dataset(
+            dataset_dir=test_dir, 
+            data_augmentation=False
+        )
+        return test_dataset
+    
+    
+    # KFOLD and Testing
+    
+    def start_kfold(self):
+        self.kfold = KFold(
+            n_splits=Config.FOLDS, 
+            shuffle=True, 
+            random_state=123456
+        )
+        self.kfold_split = self.kfold.split(self.train_dataset.ids)
+        self.fold = 0
+    
+    def next_fold(self):
+        self.fold += 1
+        self.file_manager.set_validation_setup(fold=self.fold)
+        train_ids, valid_ids = self.kfold_split.__next__()
+        
+        train_dataset = copy.deepcopy(self.train_dataset)
+        train_loader = self._get_dataloader(
+            dataset=train_dataset,
+            indices=train_ids
+        )
+        
+        valid_dataset = copy.deepcopy(self.train_dataset)
         valid_dataset.coco.imgs = {
             k:v for k,v in valid_dataset.coco.imgs.items() 
             if k in valid_ids
         }
         valid_dataset.data_augmentation = False
-        return valid_dataset
+        
+        valid_loader = self._get_dataloader(
+            dataset=valid_dataset,
+            indices=valid_ids
+        )
+        
+        return (train_dataset, valid_dataset), (train_loader, valid_loader)
     
-    def get_test_dataset(self):
-        dataset_dir = self.file_manager.get_test_dir()
-        return self._get_dataset(dataset_dir, data_augmentation=False)
+    
+    def testing(self):
+        self.file_manager.set_testing_setup()
+        train_dataset = copy.deepcopy(self.train_dataset)
+        train_loader = self._get_dataloader(
+            dataset=train_dataset
+        )
+        test_dataset = self._get_test_dataset()
+        test_loader = self._get_dataloader(
+            dataset=test_dataset
+        )
+        return (train_dataset, test_dataset), (train_loader, test_loader)
+    
+

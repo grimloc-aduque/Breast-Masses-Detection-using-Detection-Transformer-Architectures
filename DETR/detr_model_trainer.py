@@ -1,7 +1,8 @@
 
 import pytorch_lightning as pl
-from detr_config import Config
 from pytorch_lightning import Trainer
+
+from detr_config import Config
 from detr_file_manager import FileManager
 
 

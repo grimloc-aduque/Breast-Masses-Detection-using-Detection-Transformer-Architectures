@@ -3,9 +3,12 @@ import torch
 
 
 class Config:
+    
     DATASET = 'InBreast-COCO'
+    # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
+    METRIC_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
     ACCELERATOR = 'cpu'
     DEVICE = 'cpu'
@@ -19,12 +22,12 @@ class Config:
     
     def set_local_settings():
         Config.LOCAL_ENV = True
-        Config.BATCH_SIZE = 6
-        Config.FOLDS = 10
-        Config.THRESHOLDS = [0.001]
+        Config.BATCH_SIZE = 12
+        Config.FOLDS = 2
+        Config.THRESHOLDS = [0.001, 0.1]
         Config.HYPERPARAMS = [
-            ('DETR', 100, 6),
-            # ('D-DETR', 100, 6),
+            ('DETR', 256, 100, 6),
+            # ('D-DETR', 256, 100, 6),
         ]
         
     def set_gpu_settings():
@@ -32,6 +35,6 @@ class Config:
         Config.ACCELERATOR = 'gpu' if gpu_available else 'cpu'
         Config.DEVICE = 'cuda' if gpu_available else 'cpu'
         Config.HYPERPARAMS = [
-            # ('D-DETR', 100, 6),
-            ('DETR', 100, 6),
+            # ('D-DETR', 256, 100, 6),
+            ('DETR', 256, 100, 6),
         ]
