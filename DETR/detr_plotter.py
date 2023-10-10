@@ -2,10 +2,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import torchvision.transforms.functional as F
-from PIL import ImageDraw, ImageFont
-
 from detr_file_manager import FileManager
 from detr_metrics import MetricsAggregator, metrics_names
+from PIL import ImageDraw, ImageFont
 
 
 class Plotter:
@@ -39,7 +38,7 @@ class Plotter:
                 xy = (x_min, y_min), 
                 text = id2label[label.item()], 
                 fill = 'black', 
-                font = ImageFont.truetype("arial.ttf", 22)
+                font = ImageFont.load_default()
             )
             
         if ax == None:
@@ -68,7 +67,7 @@ class Plotter:
                 xy=(x_min, y_min), 
                 text=text, 
                 fill='black', 
-                font=ImageFont.truetype("arial.ttf", 22)
+                font=ImageFont.load_default()
             )
 
         if ax == None:
