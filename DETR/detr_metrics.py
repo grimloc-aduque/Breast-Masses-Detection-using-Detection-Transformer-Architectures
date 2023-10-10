@@ -1,6 +1,5 @@
 
 import pandas as pd
-
 from detr_config import Config
 from detr_file_manager import FileManager
 
@@ -43,6 +42,7 @@ class MetricsAggregator():
         
     def save_metrics(self):
         metrics_path = self.file_manager.get_csv_metrics_path()
+        self.metrics = self.metrics.round(4)
         self.metrics.to_csv(metrics_path)
         
     def load_metrics(self):
