@@ -1,3 +1,3 @@
 
 # cd /home/DETR
-nohup python3 train_detr.py &
+nohup python3 __train_detr__.py &

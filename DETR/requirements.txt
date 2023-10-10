@@ -10,3 +10,4 @@ tensorboard
 coco-eval
 albumentations
 opencv-python
+colorama
