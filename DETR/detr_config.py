@@ -5,6 +5,7 @@ import torch
 class Config:
     
     GPU_AVAILABLE = torch.cuda.is_available()
+    # GPU_AVAILABLE = False
     DATASET = 'InBreast-COCO'
     # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
