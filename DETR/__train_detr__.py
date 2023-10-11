@@ -24,10 +24,10 @@ if __name__ == '__main__':
         print(Fore.YELLOW, "Loading Configuration: Local", Fore.WHITE)
         Config.set_local_settings()
     else:
-        print(Fore.YELLOW, "Loading Configuration: GPU", Fore.WHITE)
-        Config.set_gpu_settings()
-        print(Fore.YELLOW, "GPU Available: ", Config.GPU_AVAILABLE, Fore.WHITE)
-    
+        print(Fore.YELLOW, "Loading Configuration: Benchmark", Fore.WHITE)
+        Config.set_benchmark_settings()
+    print(Fore.YELLOW, "Runnig on: ", Config.DEVICE, Fore.WHITE)
+
     # -----------------------
     # Hyperparameter Search
     # -----------------------

@@ -12,10 +12,22 @@ class Config:
     METRICS_FILE = 'metrics.csv'
     METRIC_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
-    ACCELERATOR = 'gpu' if GPU_AVAILABLE else 'cpu'
-    DEVICE = 'cuda' if GPU_AVAILABLE else 'cpu'  
     
+    def set_device():
+        CUDA = torch.cuda.is_available()
+        MPS = torch.backends.mps.is_available()
+        if CUDA:
+            Config.ACCELERATOR = 'gpu'
+            Config.DEVICE = 'cuda'
+        elif MPS:
+            Config.ACCELERATOR = 'mps'
+            Config.DEVICE = 'mps'
+        else:
+            Config.ACCELERATOR = 'cpu'
+            Config.DEVICE = 'cpu'
+
     def set_local_settings():
+        Config.set_device()
         Config.LOCAL_ENV = True
         Config.FOLDS = 2
         Config.BATCH_SIZE = 8
@@ -25,7 +37,8 @@ class Config:
             ('DETR', 256, 100, 6),
         ]
         
-    def set_gpu_settings():
+    def set_benchmark_settings():
+        Config.set_device()
         Config.LOCAL_ENV = False
         Config.FOLDS = 10
         Config.BATCH_SIZE = 16
@@ -46,3 +59,5 @@ class Config:
             ('D-DETR', 256, 100, 8),
             ('D-DETR', 256, 100, 10),
         ]
+
+

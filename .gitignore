@@ -13,3 +13,4 @@ DETR/__pycache__/
 YOLOv8/__pycache__/
 
 test.txt
+DETR/nohup*

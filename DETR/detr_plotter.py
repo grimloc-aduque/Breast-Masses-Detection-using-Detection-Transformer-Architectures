@@ -67,7 +67,7 @@ class Plotter:
                 xy=(x_min, y_min), 
                 text=text, 
                 fill='black', 
-                font=ImageFont.load_default()
+                font = ImageFont.load_default()
             )
 
         if ax == None:
