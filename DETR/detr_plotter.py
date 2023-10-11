@@ -44,7 +44,7 @@ class Plotter:
         if ax == None:
             fig, ax = plt.subplots(figsize=(3, 3))
         ax.axis("off")
-        ax.imshow(image)
+        # ax.imshow(image)
 
 
     def plot_predictions(self, pixel_values, predictions, id2label, ax=None):
@@ -73,7 +73,7 @@ class Plotter:
         if ax == None:
             fig, ax = plt.subplots(figsize=(3, 3))
         ax.axis("off")
-        ax.imshow(image)
+        # ax.imshow(image)
         
 
     def plot_comparison(self, pixel_values, annotations, predictions, id2label, axs=[]):
