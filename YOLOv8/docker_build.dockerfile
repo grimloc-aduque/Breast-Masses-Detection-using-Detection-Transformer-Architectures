@@ -10,6 +10,9 @@ RUN apt-get update && \
     apt-get install -y \
         git \
         libglib2.0-0 \
+        ffmpeg \
+        libsm6 \
+        libxext6 \
         tree \
         nano \
         htop
