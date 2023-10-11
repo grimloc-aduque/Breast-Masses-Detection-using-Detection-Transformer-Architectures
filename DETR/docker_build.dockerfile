@@ -1,6 +1,6 @@
 
-FROM nvidia/cuda:12.2.0-runtime-ubuntu20.04
-# FROM nvcr.io/nvidia/pytorch:2.1-py3
+# FROM nvidia/cuda:12.2.0-runtime-ubuntu20.04
+FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
 ENV DEBIAN_FRONTEND=noninteractive
 
