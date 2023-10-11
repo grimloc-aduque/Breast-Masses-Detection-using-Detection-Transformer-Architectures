@@ -9,9 +9,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y \
         git \
-        python3.8 \
-        python3-pip \
-        python3-dev \
         libglib2.0-0 \
         tree \
         nano \
