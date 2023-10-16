@@ -54,6 +54,6 @@ class DETRModel(pl.LightningModule):
             }
         ]
         print(self.named_parameters())
-        optimizer = torch.optim.AdamW(param_dicts, lr=1e-2)
+        optimizer = torch.optim.AdamW(param_dicts, lr=1e-4)
         return optimizer
 

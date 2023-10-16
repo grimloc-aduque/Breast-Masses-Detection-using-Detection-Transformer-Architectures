@@ -81,7 +81,7 @@ class ModelEvaluator:
         return metrics_dict
 
 
-    def evaluate(self, valid_dataset, valid_loader, threshold):
+    def evaluate(self, valid_dataset, valid_loader, threshold, save_plots=False):
         print(Fore.MAGENTA, "Evaluating on threshold: ", threshold, Fore.WHITE)
         evaluator = CocoEvaluator(
             coco_gt=valid_dataset.coco, 
@@ -94,7 +94,7 @@ class ModelEvaluator:
             predictions = self.generate_predictions(batch, threshold)
             
             # Plots
-            if batch_id == 0 or batch_id == len(valid_loader) - 1:
+            if save_plots and (batch_id == 0 or batch_id == len(valid_loader) - 1):
                 self.plotter.plot_batch_comparison(predictions, valid_dataset, threshold, batch_id)
             
             predictions = self._prepare_for_coco_detection(predictions)
