@@ -58,33 +58,27 @@ class Config:
         ])
     
     def add_layers_hyperparams():
-        Config.HYPERPARAMS.extend([            
-            ('DETR', 256, 100, 2),
-            ('DETR', 256, 100, 4),
-            ('DETR', 256, 100, 8),
+        Config.HYPERPARAMS.extend([
             ('D-DETR', 256, 100, 2),
             ('D-DETR', 256, 100, 4),
-            ('D-DETR', 256, 100, 8)
+            ('D-DETR', 256, 100, 8),
+            ('D-DETR', 256, 100, 10),
         ])
 
     def add_queries_hyperparams():
-        Config.HYPERPARAMS.extend([            
-            ('DETR', 256, 50, 6),
-            ('DETR', 256, 75, 6),
-            ('DETR', 256, 125, 6),
+        Config.HYPERPARAMS.extend([
             ('D-DETR', 256, 50, 6),
             ('D-DETR', 256, 75, 6),
-            ('D-DETR', 256, 125, 6)
+            ('D-DETR', 256, 125, 6),
+            ('D-DETR', 256, 150, 6),
         ])
         
     def add_dims_hyperparams():
-        Config.HYPERPARAMS.extend([            
-            ('DETR', 128, 100, 6),
-            ('DETR', 192, 100, 6),
-            ('DETR', 320, 100, 6),
+        Config.HYPERPARAMS.extend([
             ('D-DETR', 128, 100, 6),
             ('D-DETR', 192, 100, 6),
-            ('D-DETR', 320, 100, 6)
+            ('D-DETR', 320, 100, 6),
+            ('D-DETR', 384, 100, 6),
         ])
 
 
