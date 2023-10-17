@@ -8,7 +8,7 @@ class Config:
     # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
-    METRIC_PLOT = 'plot_metrics.png'
+    METRICS_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
     
     def set_device():

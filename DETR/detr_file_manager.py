@@ -13,7 +13,7 @@ class FileManager:
         self.dataset_dir = Config.DATASET
         self.logs_dir = Config.LOGS_DIR
         self.metrics_csv_file = Config.METRICS_FILE
-        self.metrics_plot_name = Config.METRIC_PLOT
+        self.metrics_plot_name = Config.METRICS_PLOT
     
     # Logs
     
