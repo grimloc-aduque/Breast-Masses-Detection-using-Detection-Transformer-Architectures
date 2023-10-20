@@ -9,16 +9,16 @@ from detr_config import Config
 
 class FileManager:
     def __init__(self, detr_factory):
-        self.model_name = detr_factory.get_model_name()
-        self.dataset_dir = Config.DATASET
         self.logs_dir = Config.LOGS_DIR
+        self.dataset_dir = Config.DATASET
+        self.model_name = detr_factory.get_model_name()
         self.metrics_csv_file = Config.METRICS_FILE
         self.metrics_plot_name = Config.METRICS_PLOT
+        self.model_logs_dir = os.path.join(self.logs_dir, self.dataset_dir, self.model_name)
     
     # Logs
     
     def clean_model_logs(self):
-        self.model_logs_dir = os.path.join(self.logs_dir, self.dataset_dir, self.model_name)
         print(Fore.RED, "Cleaning Logs: ", self.model_logs_dir, Fore.WHITE)
         if os.path.exists(self.model_logs_dir):
             shutil.rmtree(self.model_logs_dir)

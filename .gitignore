@@ -6,7 +6,7 @@ Otros/*
 
 # Run files
 YOLOv8/runs_*
-DETR/lightning_logs
+DETR/lightning_logs*
 
 # Pycache
 DETR/__pycache__/
