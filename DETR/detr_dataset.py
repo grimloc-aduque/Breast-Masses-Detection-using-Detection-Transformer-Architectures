@@ -8,7 +8,7 @@ import torchvision
 from colorama import Fore
 
 
-class InBreastDataset(torchvision.datasets.CocoDetection):
+class DETRDataset(torchvision.datasets.CocoDetection):
     
     def __init__(self, dataset_dir, processor, data_augmentation):
         annotation_file_path = os.path.join(dataset_dir, '_annotations.coco.json')

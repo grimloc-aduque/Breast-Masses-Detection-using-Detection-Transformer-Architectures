@@ -3,7 +3,7 @@
 import copy
 
 from detr_config import Config
-from detr_dataset import InBreastDataset, collate_fn
+from detr_dataset import DETRDataset, collate_fn
 from detr_file_manager import FileManager
 from sklearn.model_selection import KFold
 from torch.utils.data import DataLoader
@@ -20,7 +20,7 @@ class DataSource():
     # Dataset and Dataloader
 
     def _get_dataset(self, dataset_dir, data_augmentation):
-        dataset = InBreastDataset(
+        dataset = DETRDataset(
             dataset_dir = dataset_dir,
             processor = self.image_processor,
             data_augmentation = data_augmentation
