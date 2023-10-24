@@ -11,7 +11,7 @@ class FasterRCNNModel(pl.LightningModule):
         super().__init__()
         model = fasterrcnn_resnet50_fpn_v2(weights='COCO_V1')
         in_features = model.roi_heads.box_predictor.cls_score.in_features
-        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, 1)
+        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, 2)
         self.faster_rcnn = model
 
     def forward(self, pixel_values):

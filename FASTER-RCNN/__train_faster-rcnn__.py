@@ -5,7 +5,6 @@ from faster_config import Config
 from faster_data_source import DataSource
 from faster_file_manager import FileManager
 from faster_metrics import MetricsAggregator
-from faster_model import FasterRCNNModel
 from faster_model_evaluator import ModelEvaluator
 from faster_model_loader import ModelLoader
 from faster_plotter import Plotter
