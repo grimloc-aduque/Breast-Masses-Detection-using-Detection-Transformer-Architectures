@@ -7,10 +7,12 @@ Otros/*
 # Run files
 YOLOv8/runs_*
 DETR/lightning_logs*
+FASTER-RCNN/lightning_logs*
 
 # Pycache
 DETR/__pycache__/
 YOLOv8/__pycache__/
+FASTER-RCNN/__pycache__/
 
 test.txt
 DETR/nohup*
