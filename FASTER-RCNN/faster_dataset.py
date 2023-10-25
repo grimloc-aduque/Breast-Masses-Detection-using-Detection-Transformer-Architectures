@@ -92,7 +92,7 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
             }]        
 
         target = {
-            'boxes': [
+            'boxes': torch.Tensor([
                 [
                     ann['bbox'][0] / 800, 
                     ann['bbox'][1] / 800,
@@ -100,14 +100,14 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
                     (ann['bbox'][1] + ann['bbox'][3]) / 800, 
                 ]
                 for ann in annotations
-            ],
-            'labels': [ann['category_id'] for ann in annotations],
-            'area': [ann['area'] for ann in annotations],
-            'iscrowd': [0 for _ in annotations],
-            'image_id': [idx]
+            ]),
+            'labels': torch.Tensor([ann['category_id'] for ann in annotations]).type(int),
+            'area': torch.Tensor([ann['area'] for ann in annotations]),
+            'iscrowd': torch.Tensor([0 for _ in annotations]),
+            'image_id': torch.Tensor([idx]).type(int)
         }
         
-        target = {k:torch.Tensor(v) for k,v in target.items()}
+        # target = {k:torch.Tensor(v) for k,v in target.items()}
         return image, target
 
 
