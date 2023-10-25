@@ -101,10 +101,10 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
                 ]
                 for ann in annotations
             ]),
-            'labels': torch.Tensor([ann['category_id'] for ann in annotations]).type(int),
+            'labels': torch.Tensor([ann['category_id'] for ann in annotations]).type(torch.int64),
             'area': torch.Tensor([ann['area'] for ann in annotations]),
             'iscrowd': torch.Tensor([0 for _ in annotations]),
-            'image_id': torch.Tensor([idx]).type(int)
+            'image_id': torch.Tensor([idx]).type(torch.int64)
         }
         
         # target = {k:torch.Tensor(v) for k,v in target.items()}
