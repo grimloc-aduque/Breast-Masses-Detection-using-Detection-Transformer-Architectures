@@ -83,6 +83,15 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
             image = image.permute(2,0,1)
         # bbox: (x_min, y_min, w, h)
         # boxes: (x_min, y_min, x_max, y_max)
+        
+        if len(annotations) == 0:
+            annotations = [{
+                'bbox': [0,0,0,0],
+                'category_id': [1],
+                'area': [0]
+            }]
+        
+        
         target = {
             'boxes': [
                 [
