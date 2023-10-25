@@ -86,9 +86,9 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
         
         if len(annotations) == 0:
             annotations = [{
-                'bbox': (0.1,0.1,0.1,0.1),
-                'category_id': 1,
-                'area': 0.01
+                'bbox': (0,0,0,0),
+                'category_id': 0,
+                'area': 0
             }]        
 
         target = {
