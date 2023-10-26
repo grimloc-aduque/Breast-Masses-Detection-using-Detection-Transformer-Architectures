@@ -8,8 +8,8 @@ from faster_file_manager import FileManager
 from faster_metrics import MetricsAggregator, metrics_names
 from faster_model_evaluator import ModelEvaluator
 from faster_model_loader import ModelLoader
+from faster_model_trainer import ModelTrainer
 from faster_plotter import Plotter
-from faster_trainer import ModelTrainer
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--local", action="store_true") 

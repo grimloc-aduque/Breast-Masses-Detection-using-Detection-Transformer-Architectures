@@ -36,7 +36,7 @@ class ModelEvaluator:
                 detections[image_id] = detection
                 continue
             for i, score in enumerate(output['scores']):
-                if score > threshold and output['labels'][i] == 0:
+                if score > threshold and output['labels'][i] == 1:
                     detection['boxes'].append(output['boxes'][i])
                     detection['labels'].append(output['labels'][i])
                     detection['scores'].append(output['scores'][i])

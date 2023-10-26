@@ -14,6 +14,11 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
         annotation_file_path = os.path.join(dataset_dir, '_annotations.coco.json')
         print(Fore.GREEN, "Loading Annotations: ", annotation_file_path, Fore.WHITE)
         super().__init__(dataset_dir, annotation_file_path)
+        anns = {}
+        for ann_id, ann in self.coco.anns.items():
+            ann['category_id'] = 1
+            anns[ann_id] = ann
+        self.coco.anns = anns
         self.data_augmentation = data_augmentation
         self.transform = A.Compose([
             # A.Normalize(),
@@ -81,31 +86,33 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
         image = torch.Tensor(image)
         if image.shape[0] != 3:
             image = image.permute(2,0,1)
+            
         # bbox: (x_min, y_min, w, h)
         # boxes: (x_min, y_min, x_max, y_max)
-        
         if len(annotations) == 0:
-            annotations = [{
-                'bbox': (0,0,0,0),
-                'category_id': 0,
-                'area': 0
-            }]        
-
-        target = {
-            'boxes': torch.Tensor([
-                [
-                    ann['bbox'][0] / 800, 
-                    ann['bbox'][1] / 800,
-                    (ann['bbox'][0] + ann['bbox'][2]) / 800,
-                    (ann['bbox'][1] + ann['bbox'][3]) / 800, 
-                ]
-                for ann in annotations
-            ]),
-            'labels': torch.Tensor([ann['category_id'] for ann in annotations]).type(torch.int64),
-            'area': torch.Tensor([ann['area'] for ann in annotations]),
-            'iscrowd': torch.Tensor([0 for _ in annotations]),
-            'image_id': torch.Tensor([idx]).type(torch.int64)
-        }
+            target = {
+                'boxes': torch.Tensor([[0,0,0.1,0.1]]),
+                'labels': torch.Tensor([0]).type(torch.int64),
+                'area': torch.Tensor([0.01]),
+                'iscrowd': torch.Tensor([0]),
+                'image_id': torch.Tensor([idx]).type(torch.int64)
+            }
+        else:
+            target = {
+                'boxes': torch.Tensor([
+                    [
+                        ann['bbox'][0], 
+                        ann['bbox'][1],
+                        (ann['bbox'][0] + ann['bbox'][2]),
+                        (ann['bbox'][1] + ann['bbox'][3]), 
+                    ]
+                    for ann in annotations
+                ]),
+                'labels': torch.Tensor([ann['category_id'] for ann in annotations]).type(torch.int64),
+                'area': torch.Tensor([ann['area'] for ann in annotations]),
+                'iscrowd': torch.Tensor([0 for _ in annotations]),
+                'image_id': torch.Tensor([idx]).type(torch.int64)
+            }
         
         # target = {k:torch.Tensor(v) for k,v in target.items()}
         return image, target
