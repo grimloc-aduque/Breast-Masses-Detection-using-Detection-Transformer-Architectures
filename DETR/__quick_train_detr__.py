@@ -71,6 +71,7 @@ if __name__ == '__main__':
         for threshold in Config.THRESHOLDS:
             metrics = model_evaluator.evaluate(test_dataset, test_loader, threshold, save_plots=True)
             metrics_by_threshold.loc[threshold] = pd.Series(metrics)
-
+        
+        metrics_by_threshold.index.name = 'threshold'
         metrics_by_threshold.to_csv(file_manager.get_csv_metrics_path())
 

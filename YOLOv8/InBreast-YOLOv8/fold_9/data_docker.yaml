@@ -1,9 +1,0 @@
-
-path: /home/YOLOv8/InBreast_Yolov8
-
-train: ./fold_9/train/images
-val: ./fold_9/valid/images
-test: ./test/images
-
-nc: 1
-names: ['Mass']
