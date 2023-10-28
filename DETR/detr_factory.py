@@ -1,12 +1,11 @@
 
 import pytorch_lightning as pl
 import torch
+from detr_config import Config
 from transformers import (DeformableDetrConfig,
                           DeformableDetrForObjectDetection,
                           DeformableDetrImageProcessor, DetrConfig,
                           DetrForObjectDetection, DetrImageProcessor)
-
-from detr_config import Config
 
 
 class DETRFactory:
