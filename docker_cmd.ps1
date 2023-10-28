@@ -5,7 +5,8 @@ ${version}=$args[2]
 
 if (${model} -eq "detr"){
     $project_root = "DETR"
-}else{
+}
+if (${model} -eq "ultralytics"){
     $project_root = "ULTRALYTICS"
 }
 
@@ -36,12 +37,3 @@ if($command -eq "push"){
 if($command -eq "pull"){
     docker pull grimloc13/${model}:${version}
 }
-if($command -eq "remove"){
-    try{
-        docker stop ${model}-${version}
-    }catch{}
-    try{
-        docker rm ${model}-${version}
-    }catch{}
-}
-
