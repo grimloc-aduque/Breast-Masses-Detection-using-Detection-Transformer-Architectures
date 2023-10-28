@@ -1,5 +1,5 @@
 
-FROM grimloc13/ultralytics:v3
+FROM grimloc13/ultralytics:v1
 
 # Replace Project Directory
 

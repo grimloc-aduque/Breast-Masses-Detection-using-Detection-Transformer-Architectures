@@ -21,7 +21,7 @@ RUN apt-get update && \
 # Project Directory
 
 COPY ./ULTRALYTICS /workspace/ULTRALYTICS
-RUN rm -rf ./workspace/ULTRALYTICS/runs_usfq_server
+RUN rm -rf /workspace/ULTRALYTICS/runs_ultralytics
 
 # Python Packages
 
