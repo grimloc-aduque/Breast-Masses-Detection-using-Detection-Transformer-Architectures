@@ -3,10 +3,10 @@ $command=$args[0]
 ${model}=$args[1]
 ${version}=$args[2]
 
-if (${model} -eq "detr"){
+if (${model} -eq "detr-cuda"){
     $project_root = "DETR"
 }
-if (${model} -eq "ultralytics"){
+if (${model} -eq "ultralytics-cuda"){
     $project_root = "ULTRALYTICS"
 }
 
