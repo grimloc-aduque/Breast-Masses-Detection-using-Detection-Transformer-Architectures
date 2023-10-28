@@ -3,17 +3,20 @@
 
 Otros/
 Otros/*
-ULTRALYTICS_BACKUP/*
 
 # Run files
 YOLOv8/runs_*
 DETR/lightning_logs*
 FASTER-RCNN/lightning_logs*
+ULTRALYTICS/runs*
 
 # Pycache
 DETR/__pycache__/
-YOLOv8/__pycache__/
 FASTER-RCNN/__pycache__/
+ULTRALYTICS/__pycache__/
+
+ULTRALYTICS/InBreast-YOLO/fold*
+ULTRALYTICS/DDSM-YOLO/fold*
 
 test.txt
 DETR/nohup*
