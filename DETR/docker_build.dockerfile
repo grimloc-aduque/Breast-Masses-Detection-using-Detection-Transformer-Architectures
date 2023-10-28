@@ -19,10 +19,10 @@ RUN apt-get update && \
 
 # Project Directory
 
-COPY ./DETR /home/DETR
-RUN rm -rf ./home/DETR/lightning_logs
+COPY ./DETR /workspace/DETR
+RUN rm -rf /workspace/DETR/lightning_logs
 
 # Python Packages
 
 RUN python3 -m pip install --upgrade pip
-RUN pip3 install -r /home/DETR/requirements.txt
+RUN pip3 install -r /workspace/DETR/requirements.txt

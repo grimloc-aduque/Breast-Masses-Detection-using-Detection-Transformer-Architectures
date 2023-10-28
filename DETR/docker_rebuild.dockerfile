@@ -1,8 +1,8 @@
 
-FROM grimloc13/detr-detection:v05
+FROM grimloc13/detr:v2
 
 # Replace Project Directory
 
-RUN rm -rf ./home/DETR
-COPY ./DETR /home/DETR
-RUN rm -rf ./home/DETR/lightning_logs
+RUN rm -rf /workspace/DETR
+COPY ./DETR /workspace/DETR
+RUN rm -rf /workspace/DETR/lightning_logs
