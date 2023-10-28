@@ -1,5 +1,5 @@
 
-FROM grimloc13/ultralytics:v1
+FROM grimloc13/ultralytics-cuda:v1
 
 # Replace Project Directory
 

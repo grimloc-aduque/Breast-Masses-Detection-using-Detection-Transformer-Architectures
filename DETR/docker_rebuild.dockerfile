@@ -1,5 +1,5 @@
 
-FROM grimloc13/detr:v2
+FROM grimloc13/detr-cuda:v1
 
 # Replace Project Directory
 
