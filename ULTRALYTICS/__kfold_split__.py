@@ -36,7 +36,7 @@ names: {names[:Config.NUM_CLASSES]}
     '''
 
     data_docker_yaml = f'''
-path: /home/{Config.ROOT}/{Config.DATASET}
+path: /workspace/{Config.ROOT}/{Config.DATASET}
 
 train: ./fold_{fold}/train/images
 val: ./fold_{fold}/valid/images

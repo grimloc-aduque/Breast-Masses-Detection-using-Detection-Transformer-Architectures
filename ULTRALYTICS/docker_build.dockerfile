@@ -20,10 +20,10 @@ RUN apt-get update && \
 
 # Project Directory
 
-COPY ./YOLOv8 /home/YOLOv8
-RUN rm -rf ./home/YOLOv8/runs_usfq_server
+COPY ./ULTRALYTICS /workspace/ULTRALYTICS
+RUN rm -rf ./workspace/ULTRALYTICS/runs_usfq_server
 
 # Python Packages
 
 RUN python3 -m pip install --upgrade pip
-RUN pip3 install -r /home/YOLOv8/requirements.txt
+RUN pip3 install -r /workspace/ULTRALYTICS/requirements.txt

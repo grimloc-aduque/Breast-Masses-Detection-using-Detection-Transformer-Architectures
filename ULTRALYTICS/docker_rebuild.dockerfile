@@ -1,9 +1,9 @@
 
-FROM grimloc13/yolo-detection:v06
+FROM grimloc13/ultralytics:v3
 
 # Replace Project Directory
 
-RUN rm -rf ./home/YOLOv8
-COPY ./YOLOv8 /home/YOLOv8
-RUN rm -rf ./home/YOLOv8/runs_usfq_server
+RUN rm -rf /workspace/ULTRALYTICS
+COPY ./ULTRALYTICS /workspace/ULTRALYTICS
+RUN rm -rf /workspace/ULTRALYTICS/runs_ultralytics
 
