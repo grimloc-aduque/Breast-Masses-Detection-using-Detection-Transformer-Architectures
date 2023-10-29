@@ -10,7 +10,7 @@ from transformers import (DeformableDetrConfig,
 
 class DETRFactory:
     
-    def __init__(self, architecture, d_model, num_queries, transformer_layers):        
+    def __init__(self, architecture, backbone, d_model, num_queries, transformer_layers):        
         # DETR or Deformable DETR
         if architecture == 'DETR':
             self.IMG_PROCESSOR = DetrImageProcessor
@@ -25,6 +25,7 @@ class DETRFactory:
         else:
             raise Exception('Architecture not suported')
         
+        self.backbone = backbone
         self.architecture = architecture
         self.d_model = d_model
         self.num_queries = num_queries
@@ -37,6 +38,7 @@ class DETRFactory:
     def init_model_name(self):
         self.model_name = [
             f'model={self.architecture}',
+            f'backbone={self.backbone}',
             f'dim={self.d_model}',
             f'queries={self.num_queries}',
             f'layers={self.transformer_layers}'
@@ -49,10 +51,11 @@ class DETRFactory:
             num_labels=Config.NUM_CLASSES,
             id2label={0:'Mass'}, 
             label2id={'Mass': 0},
+            backbone=self.backbone,
+            d_model=self.d_model,
+            num_queries=self.num_queries,
             encoder_layers=self.transformer_layers,
             decoder_layers=self.transformer_layers,
-            num_queries=self.num_queries,
-            d_model=self.d_model
         )
 
     # DETR Factory Methods
