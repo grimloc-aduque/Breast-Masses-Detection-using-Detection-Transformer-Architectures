@@ -39,7 +39,8 @@ class DataSource():
             collate_fn=lambda batch: 
                             collate_fn(batch, self.image_processor),
             shuffle=shuffle,
-            sampler=sampler
+            sampler=sampler,
+            num_workers=Config.NUM_WORKERS,
         )
         return dataloader
     

@@ -29,6 +29,7 @@ class Config:
         Config.LOCAL_ENV = True
         Config.FOLDS = 2
         Config.BATCH_SIZE = 8
+        Config.NUM_WORKERS = 1
         Config.STEPS = 1
         Config.THRESHOLDS = [0.001, 0.1]
         Config.HYPERPARAMS = [
@@ -42,6 +43,7 @@ class Config:
         Config.LOCAL_ENV = False
         Config.FOLDS = 10
         Config.BATCH_SIZE = 16
+        Config.NUM_WORKERS = 32
         Config.EPOCHS = 200
         Config.THRESHOLDS = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         Config.HYPERPARAMS = [
