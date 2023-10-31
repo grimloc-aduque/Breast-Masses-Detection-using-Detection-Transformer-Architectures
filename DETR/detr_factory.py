@@ -38,7 +38,7 @@ class DETRFactory:
     def init_model_name(self):
         self.model_name = [
             f'model={self.architecture}',
-            f'backbone={self.backbone}',
+            f'backbone={self.backbone.split("t.")[0]}',
             f'dim={self.d_model}',
             f'queries={self.num_queries}',
             f'layers={self.transformer_layers}'
