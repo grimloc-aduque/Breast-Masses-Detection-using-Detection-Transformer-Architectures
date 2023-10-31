@@ -26,7 +26,6 @@ class UltralyticsModel:
         weights = self.file_manager.get_pretrained_weights()
         print("Loading Model: ", weights)
         print("Training on YAML: ", yaml_path)
-        # model = YOLO(weights)
         model = self.load_model(weights)
         model.train(
             data = yaml_path,
