@@ -34,7 +34,7 @@ class Config:
         Config.THRESHOLDS = [0.001, 0.1]
         Config.HYPERPARAMS = [
             # ('DETR', 'resnet50', 256, 100, 6),
-            ('D-DETR', 'resnet18', 64, 50, 2),
+            ('D-DETR', 'resnet10t.c3_in1k', 64, 50, 2),
         ]
     
     
@@ -62,7 +62,7 @@ class Config:
             # ('D-DETR', 'resnet50', 192, 100, 6),
             # ('D-DETR', 'resnet50', 320, 100, 6),
             
-            ('D-DETR', 'resnet18', 256, 100, 6),
+            ('D-DETR', 'resnet10t.c3_in1k', 256, 100, 6),
             ('D-DETR', 'resnet26', 256, 100, 6),
-            ('D-DETR', 'resnet34', 256, 100, 6),
+            ('D-DETR', 'resnet50', 256, 100, 6),
         ]
