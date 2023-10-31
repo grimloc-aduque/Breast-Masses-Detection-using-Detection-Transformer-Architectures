@@ -1,7 +1,7 @@
 
 import pytorch_lightning as pl
 import torch
-from torchvision.models.detection import fasterrcnn_resnet50_fpn
+from torchvision.models.detection import fasterrcnn_resnet50_fpn_v2
 from torchvision.models.detection.faster_rcnn import (FasterRCNN,
                                                       FastRCNNPredictor)
 
@@ -9,10 +9,11 @@ from torchvision.models.detection.faster_rcnn import (FasterRCNN,
 class FasterRCNNModel(pl.LightningModule):
     def __init__(self):
         super().__init__()
-        model = fasterrcnn_resnet50_fpn(weights='COCO_V1')
+        model = fasterrcnn_resnet50_fpn_v2(weights='COCO_V1')
         in_features = model.roi_heads.box_predictor.cls_score.in_features
         model.roi_heads.box_predictor = FastRCNNPredictor(in_features, 2)
         self.faster_rcnn = model
+        # self.faster_rcnn = fasterrcnn_resnet50_fpn_v2(weights='COCO_V1')
 
     def forward(self, pixel_values):
         self.faster_rcnn.eval()
@@ -35,7 +36,6 @@ class FasterRCNNModel(pl.LightningModule):
             self.log("valid_loss", loss)
             for loss_name, loss_value in loss_dict.items():
                 self.log(f"valid_{loss_name}", loss_value.item())
-            self.faster_rcnn.eval()
         return loss
 
     def configure_optimizers(self):

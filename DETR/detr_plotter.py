@@ -32,7 +32,7 @@ class Plotter:
             draw.rectangle(
                 xy=(x_min, y_min, x_min+w, y_min+h), 
                 outline='red', 
-                width=3
+                width=5
             )
             draw.text(
                 xy = (x_min, y_min), 
@@ -59,8 +59,8 @@ class Plotter:
             (x_min, y_min, x_max, y_max) = box
             draw.rectangle(
                 xy=(x_min, y_min, x_max, y_max), 
-                outline='red', 
-                width=3
+                outline='green', 
+                width=5
             )
             text = f'{np.round(score, 2)} - {id2label[label]}'
             draw.text(

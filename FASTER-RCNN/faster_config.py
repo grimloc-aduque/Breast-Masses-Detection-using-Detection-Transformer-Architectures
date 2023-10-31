@@ -29,7 +29,7 @@ class Config:
         Config.set_device()
         Config.LOCAL_ENV = True
         Config.FOLDS = 3
-        Config.BATCH_SIZE = 6
+        Config.BATCH_SIZE = 2
         Config.STEPS = 1
         Config.THRESHOLDS = [0.001, 0.1]
     

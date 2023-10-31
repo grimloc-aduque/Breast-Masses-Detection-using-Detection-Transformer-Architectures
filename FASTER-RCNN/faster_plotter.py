@@ -25,13 +25,12 @@ class Plotter:
         class_labels = annotations['labels']
         boxes = annotations['boxes']
         for label, box in zip(class_labels, boxes):
-            box = box * 800
             (x_min, y_min, x_max, y_max) = tuple(box)
 
             draw.rectangle(
                 xy=(x_min, y_min, x_max, y_max), 
                 outline='red', 
-                width=3
+                width=5
             )
             draw.text(
                 xy = (x_min, y_min), 
@@ -58,8 +57,8 @@ class Plotter:
             (x_min, y_min, x_max, y_max) = box
             draw.rectangle(
                 xy=(x_min, y_min, x_max, y_max), 
-                outline='red', 
-                width=3
+                outline='green', 
+                width=5
             )
             text = f'{np.round(score, 2)} - {id2label[label]}'
             draw.text(
@@ -91,7 +90,7 @@ class Plotter:
         fig, axs = plt.subplots(nrows, ncols, figsize=(ncols, nrows), dpi=80*ncols)
         for i, (image_id, predictions) in enumerate(batch_predictions.items()):
             pixel_values, annotations = dataset.__getitem__(image_id)
-            self.plot_comparison(pixel_values, annotations, predictions, {0:'Mass'}, axs=axs[:,i])
+            self.plot_comparison(pixel_values, annotations, predictions, {1:'Mass'}, axs=axs[:,i])
 
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0.01)
         plot_path = self.file_manager.get_detection_plot_path(threshold, batch_id)

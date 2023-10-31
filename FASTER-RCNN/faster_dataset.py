@@ -14,11 +14,18 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
         annotation_file_path = os.path.join(dataset_dir, '_annotations.coco.json')
         print(Fore.GREEN, "Loading Annotations: ", annotation_file_path, Fore.WHITE)
         super().__init__(dataset_dir, annotation_file_path)
+        
+        # Fix COCO Dataset
+        cats = [{'id': 1, 'name': 'Mass', 'supercategory': 'none'}]
+        self.coco.cats = cats
+        self.coco.dataset['categories'] = cats
         anns = {}
         for ann_id, ann in self.coco.anns.items():
             ann['category_id'] = 1
             anns[ann_id] = ann
         self.coco.anns = anns
+        self.coco.dataset['annotations'] = anns
+
         self.data_augmentation = data_augmentation
         self.transform = A.Compose([
             # A.Normalize(),
@@ -87,8 +94,6 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
         if image.shape[0] != 3:
             image = image.permute(2,0,1)
             
-        # bbox: (x_min, y_min, w, h)
-        # boxes: (x_min, y_min, x_max, y_max)
         if len(annotations) == 0:
             target = {
                 'boxes': torch.Tensor([[0,0,0.1,0.1]]),
@@ -99,6 +104,8 @@ class FasterRCNNDataset(torchvision.datasets.CocoDetection):
             }
         else:
             target = {
+                # bbox: (x_min, y_min, w, h)
+                # boxes: (x_min, y_min, x_max, y_max)
                 'boxes': torch.Tensor([
                     [
                         ann['bbox'][0], 

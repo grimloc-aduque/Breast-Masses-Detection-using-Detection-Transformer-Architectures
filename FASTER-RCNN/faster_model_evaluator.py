@@ -1,4 +1,5 @@
 
+import copy
 import sys
 from io import StringIO
 
@@ -31,17 +32,18 @@ class ModelEvaluator:
                 'labels': [],
                 'scores': []
             }
-            if len(output['boxes']) == 0:
+            if len(output['scores']) == 0:
                 detection = {k:torch.Tensor(v) for k, v in detection.items()}
                 detections[image_id] = detection
                 continue
-            for i, score in enumerate(output['scores']):
-                if score > threshold and output['labels'][i] == 1:
-                    detection['boxes'].append(output['boxes'][i])
-                    detection['labels'].append(output['labels'][i])
-                    detection['scores'].append(output['scores'][i])
-                detection = {k:torch.Tensor(v) for k, v in detection.items()}
-                detections[image_id] = detection
+            
+            for box, label, score in zip(output['boxes'], output['labels'], output['scores']):
+                if score > threshold and label == 1:
+                    detection['boxes'].append(box.tolist())
+                    detection['labels'].append(label.item())
+                    detection['scores'].append(score.item())
+            detection = {k:torch.Tensor(v) for k, v in detection.items()}
+            detections[image_id] = detection
         return detections # bbox: (x_min, y_min, x_max, y_max)
 
     def _convert_to_xywh(self, boxes):
@@ -54,11 +56,12 @@ class ModelEvaluator:
             boxes = prediction["boxes"]
             boxes =  self._convert_to_xywh(boxes).tolist()
             scores = prediction["scores"].tolist()
-            labels = prediction["labels"].tolist()
+            labels = prediction["labels"].to(torch.int32).tolist()
             coco_results.extend(
                 [
                     {
-                        "image_id": image_id,
+                        "image_id": image_id.item(),
+                        # "category_id": 0,
                         "category_id": labels[k],
                         "bbox": box,
                         "score": scores[k],
@@ -93,6 +96,7 @@ class ModelEvaluator:
             coco_gt=valid_dataset.coco, 
             iou_types=["bbox"]
         )
+        print("COCO Annotations: ", valid_dataset.coco.anns)
         # Evaluate Coco Predictions
         empty_predictions = True
         self.model.eval()
@@ -105,8 +109,9 @@ class ModelEvaluator:
             if save_plots and (batch_id == 0 or batch_id == len(valid_loader) - 1):
                 self.plotter.plot_batch_comparison(predictions, valid_dataset, threshold, batch_id)
             
-            # predictions = self._prepare_for_coco_detection(predictions)
-            predictions = []
+            predictions = self._prepare_for_coco_detection(predictions)
+            print("COCO Predictions: ", predictions)
+            
             if len(predictions) != 0:
                 empty_predictions = False
                 evaluator.update(predictions)

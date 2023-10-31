@@ -20,7 +20,7 @@ class ModelTrainer():
 
         early_stopping_callback = pl.callbacks.EarlyStopping(
             monitor = 'valid_loss',
-            patience = 30
+            patience = 20
         )
 
         version = self.file_manager.get_version()
