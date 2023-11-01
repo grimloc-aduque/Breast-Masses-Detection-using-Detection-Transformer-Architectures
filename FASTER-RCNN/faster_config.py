@@ -10,6 +10,7 @@ class Config:
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
     METRICS_PLOT = 'plot_metrics.png'
+    PATIENCE = 20
     NUM_CLASSES = 1
     
     def set_device():

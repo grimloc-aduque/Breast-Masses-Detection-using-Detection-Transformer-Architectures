@@ -10,6 +10,7 @@ class Config:
     METRICS_FILE = 'metrics.csv'
     METRICS_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
+    PATIENCE = 20
     
     def set_device():
         CUDA = torch.cuda.is_available()

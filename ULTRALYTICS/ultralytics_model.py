@@ -33,7 +33,8 @@ class UltralyticsModel:
             imgsz = Config.IMG_SIZE,
             epochs = Config.EPOCHS,
             batch = Config.BATCH_SIZE,
-            device = Config.DEVICE
+            device = Config.DEVICE,
+            patience = Config.PATIENCE
         )
         
         
