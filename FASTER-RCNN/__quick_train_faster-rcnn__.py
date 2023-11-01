@@ -14,7 +14,7 @@ from faster_plotter import Plotter
 parser = argparse.ArgumentParser()
 parser.add_argument("--local", action="store_true") 
 
-Config.DATASET = 'COCO-Test'
+# Config.DATASET = 'COCO-Test'
 
 
 if __name__ == '__main__':
