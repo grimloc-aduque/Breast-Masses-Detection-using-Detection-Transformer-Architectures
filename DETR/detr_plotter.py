@@ -85,7 +85,8 @@ class Plotter:
         
         
 
-    def plot_batch_comparison(self, batch_predictions, dataset, threshold, batch_id):
+    def plot_batch_comparison(self, batch_predictions, dataset, threshold, batch_id, 
+                              show=False, save_fig = True):
         nrows = 2
         ncols = len(batch_predictions)
 
@@ -95,8 +96,12 @@ class Plotter:
             self.plot_comparison(pixel_values, annotations, predictions, {0:'Mass'}, axs=axs[:,i])
 
         plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0.01)
-        plot_path = self.file_manager.get_detection_plot_path(threshold, batch_id)
-        plt.savefig(plot_path)
+        
+        if show:
+            plt.show()
+        if save_fig:
+            plot_path = self.file_manager.get_detection_plot_path(threshold, batch_id)
+            plt.savefig(plot_path)
         plt.close()
 
 

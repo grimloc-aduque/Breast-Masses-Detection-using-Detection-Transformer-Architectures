@@ -40,7 +40,7 @@ class DataSource():
                             collate_fn(batch, self.image_processor),
             shuffle=shuffle,
             sampler=sampler,
-            num_workers=Config.NUM_WORKERS,
+            # num_workers=Config.NUM_WORKERS,
         )
         return dataloader
     
