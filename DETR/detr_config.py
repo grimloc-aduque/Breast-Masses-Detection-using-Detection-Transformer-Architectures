@@ -10,7 +10,7 @@ class Config:
     METRICS_FILE = 'metrics.csv'
     METRICS_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
-    PATIENCE = 20
+    PATIENCE = 30
     
     def set_device():
         CUDA = torch.cuda.is_available()
@@ -18,6 +18,7 @@ class Config:
         if CUDA:
             Config.ACCELERATOR = 'gpu'
             Config.DEVICE = 'cuda'
+            torch.set_float32_matmul_precision('high')
         elif MPS:
             Config.ACCELERATOR = 'mps'
             Config.DEVICE = 'mps'
@@ -49,20 +50,20 @@ class Config:
         Config.EPOCHS = 200
         Config.THRESHOLDS = [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         Config.HYPERPARAMS = [
-            # ('DETR', 256, 100, 6),
-            # ('D-DETR', 'resnet50', 256, 100, 6),
+            ('DETR', 256, 100, 6),
+            ('D-DETR', 'resnet50', 256, 100, 6),
             
-            # ('D-DETR', 'resnet50', 256, 100, 2),
-            # ('D-DETR', 'resnet50', 256, 100, 4),
-            # ('D-DETR', 'resnet50', 256, 100, 8),
+            ('D-DETR', 'resnet50', 256, 100, 2),
+            ('D-DETR', 'resnet50', 256, 100, 4),
+            ('D-DETR', 'resnet50', 256, 100, 8),
             
-            # ('D-DETR', 'resnet50', 256, 50, 6),
-            # ('D-DETR', 'resnet50', 256, 75, 6),
-            # ('D-DETR', 'resnet50', 256, 125, 6),
+            ('D-DETR', 'resnet50', 256, 50, 6),
+            ('D-DETR', 'resnet50', 256, 75, 6),
+            ('D-DETR', 'resnet50', 256, 125, 6),
             
-            # ('D-DETR', 'resnet50', 128, 100, 6),
-            # ('D-DETR', 'resnet50', 192, 100, 6),
-            # ('D-DETR', 'resnet50', 320, 100, 6),
+            ('D-DETR', 'resnet50', 128, 100, 6),
+            ('D-DETR', 'resnet50', 192, 100, 6),
+            ('D-DETR', 'resnet50', 320, 100, 6),
             
             ('D-DETR', 'resnet10t.c3_in1k', 256, 100, 6),
             ('D-DETR', 'resnet26', 256, 100, 6),
