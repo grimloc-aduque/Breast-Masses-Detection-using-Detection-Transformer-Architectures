@@ -10,7 +10,7 @@ class Config:
     RUNS_DIR = 'runs_ultralytics'
     METRICS_FILE = 'metrics.csv'
     NUM_CLASSES = 1
-    PATIENCE = 20
+    PATIENCE = 30
     IMG_SIZE = 800
     
     def set_local_settings():

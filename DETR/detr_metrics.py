@@ -25,6 +25,8 @@ class MetricsAggregator():
         self.file_manager = file_manager
         self.metrics = pd.DataFrame(columns=metrics_names)
         self.metrics.index.name = 'threshold'
+        self.metrics_by_fold = pd.DataFrame(columns=[metrics_names[0]])
+        self.metrics_by_fold.index.name = 'fold'
         self.metrics_by_threshold = {
             t:pd.DataFrame(columns=metrics_names) for t in Config.THRESHOLDS
         }
@@ -32,7 +34,11 @@ class MetricsAggregator():
     def add_metrics(self, threshold, valid_metrics):
         threshold_metrics = self.metrics_by_threshold[threshold]
         fold_name = self.file_manager.get_fold_name()
-        threshold_metrics.loc[fold_name] = pd.Series(valid_metrics)        
+        fold_index = int(fold_name.split('fold_')[1])
+        threshold_metrics.loc[fold_index] = pd.Series(valid_metrics)        
+        
+        if threshold == 0.001:
+            self.metrics_by_fold.loc[fold_index] = pd.Series(valid_metrics)[metrics_names[0]]
         
     def finish_validation(self):
         for threshold in Config.THRESHOLDS:
@@ -44,6 +50,10 @@ class MetricsAggregator():
         metrics_path = self.file_manager.get_csv_metrics_path()
         self.metrics = self.metrics.round(4)
         self.metrics.to_csv(metrics_path)
+        
+        metrics_folds_path = self.file_manager.get_csv_metrics_folds_path()
+        self.metrics_by_fold = self.metrics_by_fold.round(4)
+        self.metrics_by_fold.to_csv(metrics_folds_path)
         
     def load_metrics(self):
         metrics_path = self.file_manager.get_csv_metrics_path()

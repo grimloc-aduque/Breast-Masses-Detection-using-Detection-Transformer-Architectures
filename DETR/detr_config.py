@@ -8,6 +8,7 @@ class Config:
     # DATASET = 'DDSM-COCO'
     LOGS_DIR = 'lightning_logs'
     METRICS_FILE = 'metrics.csv'
+    METRICS_FOLDS_FILE = 'metrics_folds.csv'
     METRICS_PLOT = 'plot_metrics.png'
     NUM_CLASSES = 1
     PATIENCE = 30
